@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from './ui/button';
-import { Menu, X, Moon, Sun, ChevronDown, Instagram } from 'lucide-react';
+import { Menu, X, Moon, Sun, ChevronDown, Phone, Mail } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 
@@ -45,20 +45,34 @@ export default function Header() {
     <header className="bg-background shadow-sm">
       <div className="container mx-auto py-4">
         <div className="flex justify-between items-center gap-4">
-            <Link href="/" className="flex-shrink-0">
+            <Link href="/" className="flex items-center gap-3 flex-shrink-0">
                 <Image
-                    src="https://picsum.photos/seed/dlogo/400/100"
-                    alt="Bharatha Sarathi Logo"
-                    width={300}
-                    height={75}
-                    data-ai-hint="logo newspaper"
-                    className="object-contain"
+                    src="https://picsum.photos/seed/news-logo/100/100"
+                    alt="Bharatha Sarathi Symbol"
+                    width={60}
+                    height={60}
+                    data-ai-hint="abstract logo"
+                    className="rounded-full"
                 />
+                 <div>
+                  <span className="text-2xl font-bold font-headline text-primary">ಭಾರತ ಸಾರಥಿ</span>
+                  <p className="text-sm text-muted-foreground">Daily Kannada News</p>
+                </div>
             </Link>
-            <div className="hidden md:flex flex-grow items-center justify-center border-2 border-gray-300 p-4 rounded-lg">
-                <div className='text-center'>
-                    <h2 className='text-4xl font-serif font-bold'>ADVERTISE HERE</h2>
-                    <p className='text-sm mt-2'>GANDASI SADANANDA SWAMY | bharathasarathi@gmail.com | +91 9740160669</p>
+            <div className="hidden md:flex flex-grow items-center justify-center bg-secondary p-4 rounded-lg ml-8">
+                <div className='text-center space-y-2'>
+                    <h3 className='text-xl font-bold font-headline text-primary'>ನಿಮ್ಮ ಜಾಹೀರಾತುಗಳಿಗಾಗಿ ಸಂಪರ್ಕಿಸಿ</h3>
+                    <div className="flex items-center justify-center gap-4 text-sm">
+                      <div className="flex items-center gap-2">
+                        <Mail className="h-4 w-4 text-muted-foreground" />
+                        <span>bharathasarathi@gmail.com</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Phone className="h-4 w-4 text-muted-foreground" />
+                        <span>+91 9740160669</span>
+                      </div>
+                    </div>
+                     <Button size="sm">Advertise Now</Button>
                 </div>
             </div>
         </div>
