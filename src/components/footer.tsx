@@ -32,7 +32,7 @@ export default function Footer() {
 
   return (
     <footer id="contact" className="bg-gray-900 text-white">
-      <div className="container py-8 md:py-12">
+      <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
           {/* About Us */}
           <div className="space-y-4">
@@ -94,7 +94,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 border-t border-gray-800 pt-6 text-center text-xs text-gray-500">
+        <div className="mt-8 border-t border-gray-800 pt-6 text-center text-xs text-gray-500">
           <p>&copy; {new Date().getFullYear()} Bharatha Sarathi. Powered by FILMY SCOOP.</p>
         </div>
       </div>

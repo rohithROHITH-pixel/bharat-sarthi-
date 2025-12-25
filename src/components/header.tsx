@@ -42,8 +42,6 @@ export default function Header() {
   };
   
   const handleSubscription = () => {
-    // In a real application, this would trigger the browser's push notification permission prompt.
-    // For this example, we'll just show an alert.
     alert("Thank you for subscribing! You'll receive daily news updates.");
   };
 
@@ -122,27 +120,26 @@ export default function Header() {
             </Link>
           </nav>
 
-          <div className="hidden md:flex items-center space-x-2">
-             <Button onClick={handleSubscription} variant="ghost" className="hover:bg-primary hover:text-white">
-                <Bell className="h-5 w-5 mr-2" />
-                Subscribe
-             </Button>
-             <button onClick={toggleDarkMode} className="p-2 rounded-full hover:bg-gray-700">
-                {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-             </button>
+          <div className="flex items-center justify-end md:justify-start flex-1 md:flex-none">
+            <div className="flex items-center space-x-2">
+              <Button onClick={handleSubscription} variant="ghost" className="hover:bg-primary hover:text-white text-xs sm:text-sm">
+                  <Bell className="h-5 w-5 mr-2" />
+                  Subscribe
+              </Button>
+              <button onClick={toggleDarkMode} className="p-2 rounded-full hover:bg-gray-700">
+                  {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              </button>
+            </div>
           </div>
 
-          <div className="md:hidden flex-1 flex items-center justify-end">
-            <button onClick={toggleDarkMode} className="p-2 rounded-full hover:bg-gray-700">
-                {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </button>
+          <div className="md:hidden flex items-center">
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="text-white hover:bg-gray-700 hover:text-white">
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[300px] sm:w-[400px] bg-gray-900 text-white p-0">
+              <SheetContent side="right" className="w-[300px] bg-gray-900 text-white p-0">
                   <div className="p-4">
                       <div className="flex justify-between items-center mb-8">
                           <Link href="/" className="text-2xl font-bold font-headline text-primary" onClick={() => setIsMobileMenuOpen(false)}>
@@ -163,18 +160,9 @@ export default function Header() {
                               {link.label}
                           </Link>
                           ))}
-                           <button
-                              onClick={() => {
-                                handleSubscription();
-                                setIsMobileMenuOpen(false);
-                              }}
-                              className="text-lg font-medium text-gray-300 hover:text-primary transition-colors text-left flex items-center"
-                            >
-                              <Bell className="mr-2 h-5 w-5" /> Subscribe
-                           </button>
                       </nav>
                       <div className="mt-8 pt-4 border-t border-gray-700">
-                        <p className='text-sm mt-2'>GANDASI SADANANDA SWAMY | bharathasarathi@gmail.com | +91 9740160669</p>
+                        <p className='text-xs mt-2'>GANDASI SADANANDA SWAMY | bharathasarathi@gmail.com | +91 9740160669</p>
                       </div>
                   </div>
               </SheetContent>

@@ -37,7 +37,7 @@ export default function AdminPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8 flex justify-center items-center min-h-[60vh]">
+      <div className="container mx-auto px-4 py-8 flex justify-center items-center min-h-[calc(100vh-20rem)]">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-dashed rounded-full animate-spin border-primary mx-auto"></div>
           <p className="mt-4 text-muted-foreground">Loading Admin Panel...</p>
@@ -48,7 +48,7 @@ export default function AdminPage() {
 
   if (!user) {
     return (
-      <div className="container mx-auto px-4 py-8 flex justify-center items-center min-h-[60vh]">
+      <div className="container mx-auto px-4 py-8 flex justify-center items-center min-h-[calc(100vh-20rem)]">
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle>Admin Login</CardTitle>
@@ -97,13 +97,13 @@ export default function AdminPage() {
         <Button onClick={handleLogout} className="w-full sm:w-auto">Logout</Button>
       </div>
       <div className='space-y-8'>
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-            <h2 className="text-2xl font-bold">Manage News</h2>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <h2 className="text-2xl font-bold text-center sm:text-left w-full sm:w-auto">Manage News</h2>
             <Button className="w-full sm:w-auto">
                 <PlusCircle className="mr-2 h-4 w-4" /> Add News
             </Button>
         </div>
-        <NewsList isAdmin={true} />
+        <NewsList isAdmin={true} newsItems={newsItems} />
       </div>
     </div>
   );
