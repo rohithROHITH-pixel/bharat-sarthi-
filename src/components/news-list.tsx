@@ -4,6 +4,10 @@ import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
+import { Button } from './ui/button';
+import { Pencil, Trash2 } from 'lucide-react';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from './ui/alert-dialog';
+
 
 const newsItems = [
   {
@@ -57,7 +61,7 @@ const newsItems = [
     category: 'ತಂತ್ರಜ್ಞಾನ',
     imageUrl: 'https://picsum.photos/seed/bangalore-tech-summit/600/400',
     imageHint: 'tech conference',
-    summary: 'ಏಷ್ಯಾದ ಅತಿದೊಡ್ಡ ತಂತ್ರಜ್ಞಾನ ಮೇಳವಾದ ಬೆಂಗಳೂರು ಟೆಕ್ ಸಮ್ಮಿಟ್‌ನ 27ನೇ ಆವೃತ್ತಿಯು ನವೆಂಬರ್ 19 ರಿಂದ 21 ರವರೆಗೆ ಅರಮನೆ ಮೈದಾನದಲ್ಲಿ ನಡೆಯಲಿದೆ ಎಂದು ಸರ್ಕಾರ ಘೋಷಿಸಿದೆ.',
+    summary: 'ಏಷ್ಯಾದ ಅತಿದೊಡ್ಡ ತಂತ್ರಜ್ಞಾನ ಮೇಳವಾದ ಬೆಂಗಳೂರು ಟೆಕ್ ಸಮ್ಮಿಟ್‌ನ 27ನೇ ಆವೃತ್ತಿಯು ನವೆಂಬರ್ 19 ರಿಂದ 21 ರವರೆಗೆ ಅರಮನೆ ಮೈದานದಲ್ಲಿ ನಡೆಯಲಿದೆ ಎಂದು ಸರ್ಕಾರ ಘೋಷಿಸಿದೆ.',
     time: '3 ದಿನಗಳ ಹಿಂದೆ',
   },
   {
@@ -91,19 +95,26 @@ const newsItems = [
 
 type NewsListProps = {
   category?: string;
+  isAdmin?: boolean;
 };
 
-export default function NewsList({ category }: NewsListProps) {
+export default function NewsList({ category, isAdmin = false }: NewsListProps) {
     const filteredNews = category
         ? newsItems.filter((item) => item.category === category)
         : newsItems;
+
+    const handleDelete = (id: number) => {
+        // Here you would typically call an API to delete the news item.
+        // For this example, we'll just log it.
+        console.log(`Deleting news item with id: ${id}`);
+    };
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredNews.length > 0 ? (
                 filteredNews.map((item) => (
-                    <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                        <Link href="#">
+                    <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-shadow flex flex-col">
+                        <Link href="#" className="flex-grow">
                             <div className="relative h-56 w-full">
                                 <Image
                                     src={item.imageUrl}
@@ -124,6 +135,36 @@ export default function NewsList({ category }: NewsListProps) {
                                 <p className="text-xs text-muted-foreground">{item.time}</p>
                             </CardFooter>
                         </Link>
+                        {isAdmin && (
+                            <CardFooter className="border-t pt-4">
+                                <div className="flex w-full justify-end gap-2">
+                                    <Button variant="outline" size="sm">
+                                        <Pencil className="mr-2 h-4 w-4" /> Edit
+                                    </Button>
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild>
+                                            <Button variant="destructive" size="sm">
+                                                <Trash2 className="mr-2 h-4 w-4" /> Delete
+                                            </Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                    This action cannot be undone. This will permanently delete the news article.
+                                                </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                <AlertDialogAction onClick={() => handleDelete(item.id)}>
+                                                    Continue
+                                                </AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
+                                </div>
+                            </CardFooter>
+                        )}
                     </Card>
                 ))
             ) : (

@@ -80,7 +80,7 @@ export default function AdminPage() {
             </Button>
         </div>
         <p>Welcome, {user.email}. You can now manage news articles.</p>
-        <NewsList />
+        <NewsList isAdmin={true} />
       </div>
     </div>
   );
