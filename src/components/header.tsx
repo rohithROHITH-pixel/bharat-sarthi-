@@ -44,25 +44,21 @@ export default function Header() {
   return (
     <header className="bg-background shadow-sm">
       <div className="container mx-auto py-4">
-        <div className="flex justify-between items-center">
-            <Link href="/" className="flex items-center space-x-2">
+        <div className="flex justify-between items-center gap-4">
+            <Link href="/" className="flex-shrink-0">
                 <Image
-                    src="https://picsum.photos/seed/logo/250/60"
+                    src="https://picsum.photos/seed/dlogo/400/100"
                     alt="Bharatha Sarathi Logo"
-                    width={250}
-                    height={60}
-                    data-ai-hint="logo"
+                    width={300}
+                    height={75}
+                    data-ai-hint="logo newspaper"
                     className="object-contain"
                 />
             </Link>
-            <div className="hidden md:flex flex-col items-end space-y-2 text-sm">
-                <p className="font-semibold">For advertisements, contact Bharatha Sarathi:</p>
-                <div className='flex items-center gap-4'>
-                  <a href="mailto:contact@bharathasarathi.com" className="hover:text-primary">contact@bharathasarathi.com</a>
-                  <a href="#" className="flex items-center gap-1 hover:text-primary">
-                    <Instagram className="w-4 h-4" />
-                    <span>bharathasarathi</span>
-                  </a>
+            <div className="hidden md:flex flex-grow items-center justify-center border-2 border-gray-300 p-4 rounded-lg">
+                <div className='text-center'>
+                    <h2 className='text-4xl font-serif font-bold'>ADVERTISE HERE</h2>
+                    <p className='text-sm mt-2'>GANDASI SADANANDA SWAMY | bharathasarathi@gmail.com | +91 9740160669</p>
                 </div>
             </div>
         </div>
@@ -140,12 +136,7 @@ export default function Header() {
                           ))}
                       </nav>
                       <div className="mt-8 pt-4 border-t border-gray-700">
-                        <p className="font-semibold text-white">For advertisements:</p>
-                        <a href="mailto:contact@bharathasarathi.com" className="text-sm text-gray-300 hover:text-primary">contact@bharathasarathi.com</a>
-                        <div className="flex items-center gap-2 mt-2">
-                           <Instagram className="w-4 h-4 text-gray-300" />
-                           <span className="text-sm text-gray-300">bharathasarathi</span>
-                        </div>
+                        <p className='text-sm mt-2'>GANDASI SADANANDA SWAMY | bharathasarathi@gmail.com | +91 9740160669</p>
                       </div>
                   </div>
               </SheetContent>
