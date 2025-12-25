@@ -90,16 +90,16 @@ export default function AdminPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-        <div>
+        <div className='text-center sm:text-left'>
           <h1 className="text-3xl font-bold">Admin Panel</h1>
           <p className="text-muted-foreground">Welcome back, {user.email}.</p>
         </div>
-        <Button onClick={handleLogout}>Logout</Button>
+        <Button onClick={handleLogout} className="w-full sm:w-auto">Logout</Button>
       </div>
       <div className='space-y-8'>
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <h2 className="text-2xl font-bold">Manage News</h2>
-            <Button>
+            <Button className="w-full sm:w-auto">
                 <PlusCircle className="mr-2 h-4 w-4" /> Add News
             </Button>
         </div>

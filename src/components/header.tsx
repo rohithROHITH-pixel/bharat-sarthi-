@@ -65,9 +65,9 @@ export default function Header() {
                     data-ai-hint="person holding sign"
                 />
                 <div className="absolute inset-0 bg-black/50" />
-                <div className='relative z-10 text-center space-y-2 text-white p-4'>
+                <div className='relative z-10 text-center space-y-2 text-white p-2'>
                     <h3 className='text-lg md:text-2xl font-bold font-headline'>ನಿಮ್ಮ ಜಾಹೀರಾತುಗಳಿಗಾಗಿ ಸಂಪರ್ಕಿಸಿ</h3>
-                    <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4 text-xs md:text-sm">
+                    <div className="flex flex-col md:flex-row items-center justify-center gap-1 md:gap-4 text-xs md:text-sm">
                       <div className="flex items-center gap-2">
                         <Mail className="h-4 w-4" />
                         <span>bharathasarathi@gmail.com</span>
