@@ -60,37 +60,77 @@ const newsItems = [
     summary: 'ಏಷ್ಯಾದ ಅತಿದೊಡ್ಡ ತಂತ್ರಜ್ಞಾನ ಮೇಳವಾದ ಬೆಂಗಳೂರು ಟೆಕ್ ಸಮ್ಮಿಟ್‌ನ 27ನೇ ಆವೃತ್ತಿಯು ನವೆಂಬರ್ 19 ರಿಂದ 21 ರವರೆಗೆ ಅರಮನೆ ಮೈದಾನದಲ್ಲಿ ನಡೆಯಲಿದೆ ಎಂದು ಸರ್ಕಾರ ಘೋಷಿಸಿದೆ.',
     time: '3 ದಿನಗಳ ಹಿಂದೆ',
   },
+  {
+    id: 7,
+    title: 'ಶಿವಮೊಗ್ಗದಲ್ಲಿ ಹೊಸ ವಿಮಾನ ನಿಲ್ದಾಣ: ಪ್ರವಾಸೋದ್ಯಮಕ್ಕೆ ಉತ್ತೇಜನ',
+    category: 'ರಾಜ್ಯ ಸುದ್ದಿ',
+    imageUrl: 'https://picsum.photos/seed/shimoga-airport/600/400',
+    imageHint: 'airport runway',
+    summary: 'ಮಲೆನಾಡಿನ ಹೆಬ್ಬಾಗಿಲು ಶಿವಮೊಗ್ಗದಲ್ಲಿ ನೂತನವಾಗಿ ನಿರ್ಮಾಣವಾಗಿರುವ ವಿಮಾನ ನಿಲ್ದಾಣವು ಪ್ರಧಾನಿ ನರೇಂದ್ರ ಮೋದಿಯವರಿಂದ ಉದ್ಘಾಟನೆಗೊಂಡಿತು. ಇದು ಈ ಭಾಗದ ಪ್ರವಾಸೋದ್ಯಮ ಮತ್ತು ವಾಣಿಜ್ಯ ಚಟುವಟಿಕೆಗಳಿಗೆ ದೊಡ್ಡ ಉತ್ತೇಜನ ನೀಡಲಿದೆ.',
+    time: '4 ದಿನಗಳ ಹಿಂದೆ'
+  },
+  {
+    id: 8,
+    title: 'ಐಪಿಎಲ್: ರಾಯಲ್ ಚಾಲೆಂಜರ್ಸ್ ಬೆಂಗಳೂರು ತಂಡಕ್ಕೆ ಹೊಸ ಕೋಚ್',
+    category: 'ಕ್ರೀಡೆ',
+    imageUrl: 'https://picsum.photos/seed/rcb-new-coach/600/400',
+    imageHint: 'cricket coach',
+    summary: 'ಮುಂದಿನ ಐಪಿಎಲ್ ಆವೃತ್ತಿಗಾಗಿ ರಾಯಲ್ ಚಾಲೆಂಜರ್ಸ್ ಬೆಂಗಳೂರು ತಂಡವು ಆಸ್ಟ್ರೇಲಿಯಾದ ಮಾಜಿ ಆಟಗಾರ ಆಂಡಿ ಫ್ಲವರ್ ಅವರನ್ನು ಮುಖ್ಯ ಕೋಚ್ ಆಗಿ ನೇಮಿಸಿದೆ.',
+    time: '5 ದಿನಗಳ ಹಿಂದೆ'
+  },
+  {
+    id: 9,
+    title: 'ಕರ್ನಾಟಕದಲ್ಲಿ ಡೆಂಗ್ಯೂ ಪ್ರಕರಣಗಳ ಏರಿಕೆ: ಆರೋಗ್ಯ ಇಲಾಖೆ ಎಚ್ಚರಿಕೆ',
+    category: 'ಆರೋಗ್ಯ',
+    imageUrl: 'https://picsum.photos/seed/karnataka-dengue/600/400',
+    imageHint: 'mosquito prevention',
+    summary: 'ರಾಜ್ಯದಲ್ಲಿ ಮಳೆಗಾಲದ ನಂತರ ಡೆಂಗ್ಯೂ ಪ್ರಕರಣಗಳ ಸಂಖ್ಯೆಯಲ್ಲಿ ಗಣನೀಯ ಏರಿಕೆ ಕಂಡುಬಂದಿದ್ದು, ಸೊಳ್ಳೆಗಳ ನಿಯಂತ್ರಣಕ್ಕೆ ಮತ್ತು ಸ್ವಚ್ಛತೆಗೆ ಆದ್ಯತೆ ನೀಡುವಂತೆ ಆರೋಗ್ಯ ಇಲಾಖೆ ಸಾರ್ವಜನಿಕರಲ್ಲಿ ಮನವಿ ಮಾಡಿದೆ.',
+    time: '6 ದಿನಗಳ ಹಿಂದೆ'
+  }
 ];
 
+type NewsListProps = {
+  category?: string;
+};
 
-export default function NewsList() {
+export default function NewsList({ category }: NewsListProps) {
+    const filteredNews = category
+        ? newsItems.filter((item) => item.category === category)
+        : newsItems;
+
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {newsItems.map((item) => (
-                <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                    <Link href="#">
-                        <div className="relative h-56 w-full">
-                            <Image
-                                src={item.imageUrl}
-                                alt={item.title}
-                                fill
-                                className="object-cover"
-                                data-ai-hint={item.imageHint}
-                            />
-                        </div>
-                        <CardHeader>
-                            <Badge variant="secondary" className="mb-2 w-fit">{item.category}</Badge>
-                            <CardTitle className="text-xl font-bold leading-snug">{item.title}</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-muted-foreground">{item.summary}</p>
-                        </CardContent>
-                        <CardFooter>
-                            <p className="text-xs text-muted-foreground">{item.time}</p>
-                        </CardFooter>
-                    </Link>
-                </Card>
-            ))}
+            {filteredNews.length > 0 ? (
+                filteredNews.map((item) => (
+                    <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                        <Link href="#">
+                            <div className="relative h-56 w-full">
+                                <Image
+                                    src={item.imageUrl}
+                                    alt={item.title}
+                                    fill
+                                    className="object-cover"
+                                    data-ai-hint={item.imageHint}
+                                />
+                            </div>
+                            <CardHeader>
+                                <Badge variant="secondary" className="mb-2 w-fit">{item.category}</Badge>
+                                <CardTitle className="text-xl font-bold leading-snug">{item.title}</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-muted-foreground">{item.summary}</p>
+                            </CardContent>
+                            <CardFooter>
+                                <p className="text-xs text-muted-foreground">{item.time}</p>
+                            </CardFooter>
+                        </Link>
+                    </Card>
+                ))
+            ) : (
+                <div className="col-span-full text-center py-12">
+                    <p className="text-lg text-muted-foreground">ಈ ವರ್ಗದಲ್ಲಿ ಯಾವುದೇ ಸುದ್ದಿ ಲಭ್ಯವಿಲ್ಲ.</p>
+                </div>
+            )}
         </div>
     );
 }
