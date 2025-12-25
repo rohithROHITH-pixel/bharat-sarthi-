@@ -2,8 +2,10 @@
 
 import Link from 'next/link';
 import { Facebook, Twitter, Youtube } from 'lucide-react';
-import { Calendar } from '@/components/ui/calendar';
 import { useState } from 'react';
+import { Input } from './ui/input';
+import { Button } from './ui/button';
+import { Label } from './ui/label';
 
 const socialLinks = [
     { icon: Facebook, href: 'https://facebook.com', 'aria-label': 'Facebook' },
@@ -18,7 +20,15 @@ const latestPosts = [
 ]
 
 export default function Footer() {
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
+
+  const handleDateSearch = () => {
+    // In a real application, you would navigate to a search results page
+    // or filter the news content based on the selectedDate.
+    // For now, we'll just log it to the console.
+    console.log(`Searching for news on: ${selectedDate}`);
+    alert(`Searching for news from ${selectedDate}. This feature can be fully implemented next.`);
+  };
 
   return (
     <footer id="contact" className="bg-gray-900 text-white">
@@ -39,29 +49,24 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Calendar */}
-          <div className="space-y-4 flex justify-center">
-             <Calendar
-                mode="single"
-                selected={date}
-                onSelect={setDate}
-                className="rounded-md bg-gray-800 p-4 text-white"
-                classNames={{
-                    caption_label: "hidden",
-                    caption_dropdowns: "flex gap-2",
-                    vhidden: "hidden",
-                    dropdown: "bg-gray-800 border-gray-600 rounded p-1 text-sm focus:ring-primary",
-                    dropdown_month: "w-24",
-                    dropdown_year: "w-20",
-                    head_cell: "text-gray-300",
-                    day: "hover:bg-primary hover:text-white rounded-md",
-                    day_selected: "bg-primary text-white !text-primary-foreground rounded-md",
-                    day_today: "bg-primary/50 text-white rounded-md",
-                }}
-                fromYear={2015}
-                toYear={2030}
-                captionLayout="dropdown-buttons"
-             />
+          {/* Date Search */}
+          <div className="space-y-4">
+            <h4 className="text-lg font-semibold tracking-wider uppercase text-gray-300">Find News by Date</h4>
+            <div className="flex flex-col gap-4">
+                <div className='space-y-2'>
+                    <Label htmlFor="news-date" className='text-gray-400'>Select a date</Label>
+                    <Input
+                        id="news-date"
+                        type="date"
+                        value={selectedDate}
+                        onChange={(e) => setSelectedDate(e.target.value)}
+                        className="bg-gray-800 border-gray-600 text-white"
+                    />
+                </div>
+                <Button onClick={handleDateSearch} className="bg-primary hover:bg-primary/90 text-primary-foreground">
+                    Find News
+                </Button>
+            </div>
           </div>
 
           {/* Latest Posts */}
