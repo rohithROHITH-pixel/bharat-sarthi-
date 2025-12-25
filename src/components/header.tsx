@@ -54,29 +54,28 @@ export default function Header() {
                   <p className="text-sm text-muted-foreground">Daily Kannada News</p>
                 </div>
             </Link>
-            <div className="hidden md:flex flex-grow items-center justify-center bg-secondary p-4 rounded-lg ml-8 gap-4">
-                <div className="relative w-40 h-40 flex-shrink-0">
-                    <Image 
-                        src="https://picsum.photos/seed/advert/400/400"
-                        alt="Advertise with us"
-                        fill
-                        className="rounded-lg object-cover"
-                        data-ai-hint="person holding sign"
-                    />
-                </div>
-                <div className='text-center space-y-2'>
-                    <h3 className='text-xl font-bold font-headline text-primary'>ನಿಮ್ಮ ಜಾಹೀರಾತುಗಳಿಗಾಗಿ ಸಂಪರ್ಕಿಸಿ</h3>
+            <div className="hidden md:flex flex-grow items-center justify-center rounded-lg ml-8 relative h-48 overflow-hidden">
+                <Image 
+                    src="https://picsum.photos/seed/person-ad/800/400"
+                    alt="Person holding an advertisement"
+                    fill
+                    className="object-cover"
+                    data-ai-hint="person holding sign"
+                />
+                <div className="absolute inset-0 bg-black/50" />
+                <div className='relative z-10 text-center space-y-2 text-white p-4'>
+                    <h3 className='text-2xl font-bold font-headline'>ನಿಮ್ಮ ಜಾಹೀರಾತುಗಳಿಗಾಗಿ ಸಂಪರ್ಕಿಸಿ</h3>
                     <div className="flex items-center justify-center gap-4 text-sm">
                       <div className="flex items-center gap-2">
-                        <Mail className="h-4 w-4 text-muted-foreground" />
+                        <Mail className="h-4 w-4" />
                         <span>bharathasarathi@gmail.com</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Phone className="h-4 w-4 text-muted-foreground" />
+                        <Phone className="h-4 w-4" />
                         <span>+91 9740160669</span>
                       </div>
                     </div>
-                     <Button size="sm">Advertise Now</Button>
+                     <Button size="sm" variant="outline" className="text-foreground">Advertise Now</Button>
                 </div>
             </div>
         </div>
