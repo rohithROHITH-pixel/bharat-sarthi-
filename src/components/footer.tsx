@@ -45,14 +45,22 @@ export default function Footer() {
                 mode="single"
                 selected={date}
                 onSelect={setDate}
-                className="rounded-md bg-gray-800 p-0 text-white"
+                className="rounded-md bg-gray-800 p-4 text-white"
                 classNames={{
-                    caption: "text-primary font-bold",
+                    caption_label: "hidden",
+                    caption_dropdowns: "flex gap-2",
+                    vhidden: "hidden",
+                    dropdown: "bg-gray-800 border-gray-600 rounded p-1 text-sm focus:ring-primary",
+                    dropdown_month: "w-24",
+                    dropdown_year: "w-20",
                     head_cell: "text-gray-300",
-                    day: "hover:bg-primary hover:text-white",
-                    day_selected: "bg-primary text-white !text-primary-foreground",
-                    day_today: "bg-primary/50 text-white",
+                    day: "hover:bg-primary hover:text-white rounded-md",
+                    day_selected: "bg-primary text-white !text-primary-foreground rounded-md",
+                    day_today: "bg-primary/50 text-white rounded-md",
                 }}
+                fromYear={2015}
+                toYear={2030}
+                captionLayout="dropdown-buttons"
              />
           </div>
 
