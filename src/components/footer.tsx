@@ -19,7 +19,7 @@ const latestPosts = [
 ]
 
 export default function Footer() {
-  const [date, setDate] = useState<Date | undefined>(new Date('2025-12-01'));
+  const [date, setDate] = useState<Date | undefined>(new Date());
 
   return (
     <footer id="contact" className="bg-gray-900 text-white">
@@ -47,7 +47,7 @@ export default function Footer() {
           </div>
 
           {/* Calendar */}
-          <div className="space-y-4">
+          <div className="space-y-4 flex justify-center">
              <Calendar
                 mode="single"
                 selected={date}
@@ -57,7 +57,8 @@ export default function Footer() {
                     caption: "text-primary font-bold",
                     head_cell: "text-gray-300",
                     day: "hover:bg-primary hover:text-white",
-                    day_selected: "bg-primary text-white",
+                    day_selected: "bg-primary text-white !text-primary-foreground",
+                    day_today: "bg-primary/50 text-white",
                 }}
              />
           </div>
