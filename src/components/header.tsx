@@ -44,17 +44,19 @@ export default function Header() {
   return (
     <header className="bg-background shadow-sm">
       <div className="container mx-auto py-4">
-        <div className="flex justify-between items-center gap-4">
-            <Link href="/" className="flex items-center gap-3 flex-shrink-0">
-                <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center">
-                  <span className="text-3xl font-bold text-primary-foreground font-headline">BS</span>
-                </div>
-                 <div>
-                  <span className="text-2xl font-bold font-headline text-primary">ಭಾರತ ಸಾರಥಿ</span>
-                  <p className="text-sm text-muted-foreground">Daily Kannada News</p>
-                </div>
-            </Link>
-            <div className="hidden md:flex flex-grow items-center justify-center rounded-lg ml-8 relative h-48 overflow-hidden">
+        <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-4">
+            <div className="flex justify-center md:justify-start">
+              <Link href="/" className="flex items-center gap-3 flex-shrink-0">
+                  <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center">
+                    <span className="text-3xl font-bold text-primary-foreground font-headline">BS</span>
+                  </div>
+                  <div>
+                    <span className="text-2xl font-bold font-headline text-primary">ಭಾರತ ಸಾರಥಿ</span>
+                    <p className="text-sm text-muted-foreground">Daily Kannada News</p>
+                  </div>
+              </Link>
+            </div>
+            <div className="col-span-1 md:col-span-2 flex items-center justify-center rounded-lg relative h-40 md:h-48 overflow-hidden">
                 <Image 
                     src="https://picsum.photos/seed/person-ad/800/400"
                     alt="Person holding an advertisement"
@@ -64,8 +66,8 @@ export default function Header() {
                 />
                 <div className="absolute inset-0 bg-black/50" />
                 <div className='relative z-10 text-center space-y-2 text-white p-4'>
-                    <h3 className='text-2xl font-bold font-headline'>ನಿಮ್ಮ ಜಾಹೀರಾತುಗಳಿಗಾಗಿ ಸಂಪರ್ಕಿಸಿ</h3>
-                    <div className="flex items-center justify-center gap-4 text-sm">
+                    <h3 className='text-lg md:text-2xl font-bold font-headline'>ನಿಮ್ಮ ಜಾಹೀರಾತುಗಳಿಗಾಗಿ ಸಂಪರ್ಕಿಸಿ</h3>
+                    <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4 text-xs md:text-sm">
                       <div className="flex items-center gap-2">
                         <Mail className="h-4 w-4" />
                         <span>bharathasarathi@gmail.com</span>
@@ -75,7 +77,7 @@ export default function Header() {
                         <span>+91 9740160669</span>
                       </div>
                     </div>
-                     <Button size="sm" variant="outline" className="text-foreground">Advertise Now</Button>
+                     <Button size="sm" variant="outline" className="text-foreground mt-2">Advertise Now</Button>
                 </div>
             </div>
         </div>
@@ -120,7 +122,7 @@ export default function Header() {
              </button>
           </div>
 
-          <div className="md:hidden flex items-center">
+          <div className="md:hidden flex-1 flex items-center justify-end">
             <button onClick={toggleDarkMode} className="p-2 rounded-full hover:bg-gray-700">
                 {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </button>
