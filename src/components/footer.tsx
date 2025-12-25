@@ -32,10 +32,10 @@ export default function Footer() {
 
   return (
     <footer id="contact" className="bg-gray-900 text-white">
-      <div className="container py-12 md:py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-12">
+      <div className="container py-8 md:py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
           {/* About Us */}
-          <div className="space-y-6">
+          <div className="space-y-4">
             <h4 className="text-sm font-semibold tracking-wider uppercase text-gray-300">ABOUT US</h4>
             <div className="bg-primary p-2 inline-flex items-center justify-center rounded w-28 h-28">
                 <span className="text-5xl font-bold text-primary-foreground font-headline">BS</span>
@@ -50,7 +50,7 @@ export default function Footer() {
           </div>
           
           {/* Contact Info */}
-          <div className="space-y-6">
+          <div className="space-y-4">
             <h4 className="text-sm font-semibold tracking-wider uppercase text-gray-300">Contact Us</h4>
              <p className="text-gray-400 text-sm leading-relaxed">
                 GANDASI SADANANDA SWAMY<br/>
@@ -60,7 +60,7 @@ export default function Footer() {
           </div>
 
           {/* Date Search */}
-          <div className="space-y-6">
+          <div className="space-y-4">
             <h4 className="text-sm font-semibold tracking-wider uppercase text-gray-300">Find News by Date</h4>
             <div className="flex flex-col gap-4 max-w-xs">
                 <div className='space-y-2'>
@@ -80,11 +80,11 @@ export default function Footer() {
           </div>
 
           {/* Latest Posts */}
-          <div className="space-y-6">
+          <div className="space-y-4">
             <h4 className="text-sm font-semibold tracking-wider uppercase text-gray-300">LATEST POSTS</h4>
-            <ul className="space-y-4">
+            <ul className="space-y-3">
               {latestPosts.map((post) => (
-                <li key={post.label} className='border-b border-gray-700 pb-3 last:border-b-0'>
+                <li key={post.label} className='border-b border-gray-700 pb-2 last:border-b-0'>
                   <Link href={post.href} className="text-gray-400 hover:text-primary transition-colors flex items-center gap-3 text-sm">
                     <span className="text-primary">&gt;</span> {post.label}
                   </Link>
@@ -94,7 +94,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 border-t border-gray-800 pt-8 text-center text-xs text-gray-500">
+        <div className="mt-12 border-t border-gray-800 pt-6 text-center text-xs text-gray-500">
           <p>&copy; {new Date().getFullYear()} Bharatha Sarathi. Powered by FILMY SCOOP.</p>
         </div>
       </div>
