@@ -6,6 +6,8 @@ import { FormEvent, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import NewsList from '@/components/news-list';
+import { PlusCircle } from 'lucide-react';
 
 export default function AdminPage() {
   const { user, loading } = useAuth();
@@ -70,8 +72,16 @@ export default function AdminPage() {
         <h1 className="text-3xl font-bold">Admin Panel</h1>
         <Button onClick={handleLogout}>Logout</Button>
       </div>
-      <p>Welcome, {user.email}. You can now manage news articles.</p>
-      {/* News management UI will go here */}
+      <div className='space-y-8'>
+        <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-bold">Manage News</h2>
+            <Button>
+                <PlusCircle className="mr-2 h-4 w-4" /> Add News
+            </Button>
+        </div>
+        <p>Welcome, {user.email}. You can now manage news articles.</p>
+        <NewsList />
+      </div>
     </div>
   );
 }
