@@ -54,7 +54,16 @@ export default function Header() {
                   <p className="text-sm text-muted-foreground">Daily Kannada News</p>
                 </div>
             </Link>
-            <div className="hidden md:flex flex-grow items-center justify-center bg-secondary p-4 rounded-lg ml-8">
+            <div className="hidden md:flex flex-grow items-center justify-center bg-secondary p-4 rounded-lg ml-8 gap-4">
+                <div className="relative w-40 h-40 flex-shrink-0">
+                    <Image 
+                        src="https://picsum.photos/seed/advert/400/400"
+                        alt="Advertise with us"
+                        fill
+                        className="rounded-lg object-cover"
+                        data-ai-hint="person holding sign"
+                    />
+                </div>
                 <div className='text-center space-y-2'>
                     <h3 className='text-xl font-bold font-headline text-primary'>ನಿಮ್ಮ ಜಾಹೀರಾತುಗಳಿಗಾಗಿ ಸಂಪರ್ಕಿಸಿ</h3>
                     <div className="flex items-center justify-center gap-4 text-sm">
