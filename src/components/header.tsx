@@ -46,14 +46,9 @@ export default function Header() {
       <div className="container mx-auto py-4">
         <div className="flex justify-between items-center gap-4">
             <Link href="/" className="flex items-center gap-3 flex-shrink-0">
-                <Image
-                    src="https://picsum.photos/seed/news-logo/100/100"
-                    alt="Bharatha Sarathi Symbol"
-                    width={60}
-                    height={60}
-                    data-ai-hint="abstract logo"
-                    className="rounded-full"
-                />
+                <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center">
+                  <span className="text-3xl font-bold text-primary-foreground font-headline">BS</span>
+                </div>
                  <div>
                   <span className="text-2xl font-bold font-headline text-primary">ಭಾರತ ಸಾರಥಿ</span>
                   <p className="text-sm text-muted-foreground">Daily Kannada News</p>

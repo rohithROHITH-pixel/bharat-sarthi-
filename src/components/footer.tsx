@@ -28,14 +28,8 @@ export default function Footer() {
           {/* About Us */}
           <div className="space-y-4">
             <h4 className="text-lg font-semibold tracking-wider uppercase text-gray-300">ABOUT US</h4>
-            <div className="bg-white p-2 inline-block rounded">
-                <Image 
-                    src="https://picsum.photos/seed/footer-logo/300/100" 
-                    alt="Bharatha Sarathi Logo"
-                    width={250}
-                    height={80}
-                    data-ai-hint="kannada newspaper logo"
-                />
+            <div className="bg-primary p-2 inline-flex items-center justify-center rounded">
+                <span className="text-5xl font-bold text-primary-foreground font-headline px-4">BS</span>
             </div>
             <div className="flex space-x-4">
                 {socialLinks.map((social, index) => (
