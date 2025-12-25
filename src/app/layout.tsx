@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { AuthProvider } from '@/context/auth-context';
 import Header from '@/components/header';
+import Footer from '@/components/footer';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'Sarathi News',
-  description: 'Daily news updates, clean and fast.',
+  title: 'Bharatha Sarathi - Astrology Services',
+  description: 'Expert astrology services to guide you on your life path.',
 };
 
 export default function RootLayout({
@@ -19,18 +19,17 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body bg-background text-foreground antialiased">
-        <AuthProvider>
-          <div className="flex min-h-screen flex-col">
-            <Header />
-            <main className="flex-grow container mx-auto px-4 py-8">
-              {children}
-            </main>
-          </div>
-          <Toaster />
-        </AuthProvider>
+        <div className="flex min-h-screen flex-col">
+          <Header />
+          <main className="flex-grow">
+            {children}
+          </main>
+          <Footer />
+        </div>
+        <Toaster />
       </body>
     </html>
   );
