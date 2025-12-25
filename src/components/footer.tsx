@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { Facebook, Twitter, Youtube } from 'lucide-react';
-import Image from 'next/image';
 import { Calendar } from '@/components/ui/calendar';
 import { useState } from 'react';
 
