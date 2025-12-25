@@ -7,10 +7,10 @@ import { Menu, X } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
 
 const navLinks = [
-  { href: '#home', label: 'Home' },
-  { href: '#about', label: 'About' },
-  { href: '#services', label: 'Services' },
-  { href: '#contact', label: 'Contact' },
+  { href: '#home', label: 'ಮುಖಪುಟ' },
+  { href: '#about', label: 'ಬಗ್ಗೆ' },
+  { href: '#services', label: 'ಸೇವೆಗಳು' },
+  { href: '#contact', label: 'ಸಂಪರ್ಕ' },
 ];
 
 export default function Header() {
@@ -33,7 +33,7 @@ export default function Header() {
     >
       <div className="container flex h-20 items-center justify-between">
         <Link href="/" className="text-3xl font-bold font-headline text-primary">
-          Bharatha Sarathi
+          ಭಾರತ ಸಾರಥಿ
         </Link>
 
         <nav className="hidden md:flex items-center space-x-8">
@@ -59,7 +59,7 @@ export default function Header() {
                 <div className="p-4">
                     <div className="flex justify-between items-center mb-8">
                         <Link href="/" className="text-2xl font-bold font-headline text-primary" onClick={() => setIsMobileMenuOpen(false)}>
-                            Bharatha Sarathi
+                            ಭಾರತ ಸಾರಥಿ
                         </Link>
                         <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(false)}>
                             <X className="h-6 w-6" />

@@ -49,7 +49,7 @@ export default function TestimonialsSection() {
   return (
     <section id="testimonials" className="py-16 md:py-24 bg-secondary">
       <div className="container mx-auto">
-        <h2 className="text-4xl md:text-5xl font-headline font-bold text-primary text-center mb-12">What Our Clients Say</h2>
+        <h2 className="text-4xl md:text-5xl font-headline font-bold text-primary text-center mb-12">ನಮ್ಮ ಗ್ರಾಹಕರು ಏನು ಹೇಳುತ್ತಾರೆ</h2>
         <Carousel
           opts={{
             align: 'start',

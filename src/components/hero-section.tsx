@@ -15,16 +15,16 @@ export default function HeroSection() {
       <div className="absolute inset-0 bg-black/60" />
       <div className="relative z-10 text-center space-y-6 px-4">
         <h1 className="text-5xl md:text-7xl lg:text-8xl font-headline font-bold uppercase tracking-widest text-shadow-lg">
-          SARATHI
+          ಸಾರಥಿ
         </h1>
         <p className="text-2xl md:text-3xl font-light tracking-wide">
-          Astrology Services
+          ಜ್ಯೋತಿಷ್ಯ ಸೇವೆಗಳು
         </p>
         <p className="max-w-2xl mx-auto text-lg text-gray-200">
-          Unlock your potential and navigate life's challenges with the wisdom of the stars.
+          ನಕ್ಷತ್ರಗಳ ಜ್ಞಾನದಿಂದ ನಿಮ್ಮ ಸಾಮರ್ಥ್ಯವನ್ನು ಅನ್ಲಾಕ್ ಮಾಡಿ ಮತ್ತು ಜೀವನದ ಸವಾಲುಗಳನ್ನು ನ್ಯಾವಿಗೇಟ್ ಮಾಡಿ.
         </p>
         <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-6 rounded-full">
-          Book an Appointment
+          ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಕಾಯ್ದಿರಿಸಿ
         </Button>
       </div>
     </section>
