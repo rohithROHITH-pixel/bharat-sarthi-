@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from './ui/button';
-import { Menu, X, Moon, Sun, ChevronDown, Phone, Mail } from 'lucide-react';
+import { Menu, X, Moon, Sun, ChevronDown, Phone, Mail, Bell } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 
@@ -39,6 +39,12 @@ export default function Header() {
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
+  };
+  
+  const handleSubscription = () => {
+    // In a real application, this would trigger the browser's push notification permission prompt.
+    // For this example, we'll just show an alert.
+    alert("Thank you for subscribing! You'll receive daily news updates.");
   };
 
   return (
@@ -116,7 +122,11 @@ export default function Header() {
             </Link>
           </nav>
 
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-2">
+             <Button onClick={handleSubscription} variant="ghost" className="hover:bg-primary hover:text-white">
+                <Bell className="h-5 w-5 mr-2" />
+                Subscribe
+             </Button>
              <button onClick={toggleDarkMode} className="p-2 rounded-full hover:bg-gray-700">
                 {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
              </button>
@@ -153,6 +163,15 @@ export default function Header() {
                               {link.label}
                           </Link>
                           ))}
+                           <button
+                              onClick={() => {
+                                handleSubscription();
+                                setIsMobileMenuOpen(false);
+                              }}
+                              className="text-lg font-medium text-gray-300 hover:text-primary transition-colors text-left flex items-center"
+                            >
+                              <Bell className="mr-2 h-5 w-5" /> Subscribe
+                           </button>
                       </nav>
                       <div className="mt-8 pt-4 border-t border-gray-700">
                         <p className='text-sm mt-2'>GANDASI SADANANDA SWAMY | bharathasarathi@gmail.com | +91 9740160669</p>

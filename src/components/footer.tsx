@@ -21,8 +21,7 @@ const latestPosts = [
 
 export default function Footer() {
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
-  const [email, setEmail] = useState('');
-
+ 
   const handleDateSearch = () => {
     // In a real application, you would navigate to a search results page
     // or filter the news content based on the selectedDate.
@@ -30,15 +29,6 @@ export default function Footer() {
     alert(`Searching for news from ${selectedDate}. This feature can be fully implemented next.`);
   };
 
-  const handleSubscribe = () => {
-    if (email) {
-      console.log(`Subscribing with email: ${email}`);
-      alert(`Thank you for subscribing with ${email}! You'll receive daily updates.`);
-      setEmail('');
-    } else {
-      alert('Please enter a valid email address.');
-    }
-  };
 
   return (
     <footer id="contact" className="bg-gray-900 text-white">
@@ -59,26 +49,14 @@ export default function Footer() {
             </div>
           </div>
           
-          {/* Subscribe */}
+          {/* Contact Info */}
           <div className="space-y-4">
-            <h4 className="text-lg font-semibold tracking-wider uppercase text-gray-300">Subscribe for Updates</h4>
-            <p className="text-gray-400 text-sm">Get the latest news delivered straight to your inbox every day.</p>
-            <div className="flex flex-col gap-4">
-                <div className='space-y-2'>
-                    <Label htmlFor="email-subscribe" className='text-gray-400'>Email Address</Label>
-                    <Input
-                        id="email-subscribe"
-                        type="email"
-                        placeholder="your@email.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="bg-gray-800 border-gray-600 text-white"
-                    />
-                </div>
-                <Button onClick={handleSubscribe} className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                    Subscribe
-                </Button>
-            </div>
+            <h4 className="text-lg font-semibold tracking-wider uppercase text-gray-300">Contact Us</h4>
+             <p className="text-gray-400 text-sm">
+                GANDASI SADANANDA SWAMY<br/>
+                bharathasarathi@gmail.com<br/>
+                +91 9740160669
+            </p>
           </div>
 
           {/* Date Search */}
