@@ -17,6 +17,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { useToast } from '@/hooks/use-toast';
+import { usePathname } from 'next/navigation';
+
 
 const navLinks = [
   { href: '/', label: 'HOME' },
@@ -42,7 +44,7 @@ export default function Header() {
   const { toast } = useToast();
   const [isSubscribeOpen, setSubscribeOpen] = useState(false);
   const [subscriberEmail, setSubscriberEmail] = useState('');
-  const [activeLink, setActiveLink] = useState('HOME');
+  const pathname = usePathname();
 
   useEffect(() => {
     if (isDarkMode) {
@@ -66,6 +68,8 @@ export default function Header() {
     setSubscriberEmail('');
     setSubscribeOpen(false);
   };
+  
+  const epaperPath = '#epaper';
 
   return (
     <header className="bg-background shadow-sm">
@@ -113,11 +117,10 @@ export default function Header() {
           <nav className="hidden md:flex items-center space-x-1">
             {navLinks.map((link) => (
               <Link
-                key={link.label}
+                key={link.href + link.label}
                 href={link.href}
-                onClick={() => setActiveLink(link.label)}
                 className="px-3 py-2 text-sm font-medium uppercase hover:bg-primary hover:text-white transition-colors border-b-2 data-[active=true]:border-primary data-[active=false]:border-transparent"
-                data-active={activeLink === link.label}
+                data-active={pathname === link.href}
               >
                 {link.label}
               </Link>
@@ -139,10 +142,9 @@ export default function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
             <Link
-                href="#epaper"
-                onClick={() => setActiveLink('ಇ-ಪೇಪರ್')}
+                href={epaperPath}
                 className="px-3 py-2 text-sm font-medium uppercase hover:bg-primary hover:text-white transition-colors border-b-2 data-[active=true]:border-primary data-[active=false]:border-transparent"
-                data-active={activeLink === 'ಇ-ಪೇಪರ್'}
+                data-active={pathname === epaperPath}
               >
                 ಇ-ಪೇಪರ್
               </Link>
@@ -224,7 +226,7 @@ export default function Header() {
                       <nav className="flex flex-col space-y-4">
                           {[...navLinks, { href: '#epaper', label: 'ಇ-ಪೇಪರ್' }].map((link) => (
                           <Link
-                              key={link.label}
+                              key={link.href + link.label}
                               href={link.href}
                               className="text-lg font-medium text-gray-300 hover:text-primary transition-colors"
                               onClick={() => setIsMobileMenuOpen(false)}
