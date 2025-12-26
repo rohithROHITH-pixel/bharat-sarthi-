@@ -10,7 +10,7 @@ import { NewsArticle } from '@/lib/news-data';
 
 export default function NewsArticlePage() {
   const params = useParams();
-  const articleId = typeof params.id === 'string' ? params.id : '';
+  const articleId = Array.isArray(params.id) ? params.id[0] : params.id;
 
   const { data: article, loading, error } = useDoc<NewsArticle>(articleId ? `news/${articleId}` : null);
 
@@ -26,7 +26,7 @@ export default function NewsArticlePage() {
     );
   }
 
-  if (!article && !loading) {
+  if ((!article && !loading) || !articleId) {
     notFound();
   }
   
