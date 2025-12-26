@@ -30,6 +30,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Textarea } from '@/components/ui/textarea';
 import { useRouter } from 'next/navigation';
 import { sampleNewsData } from '@/lib/sample-data';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 
 export default function AdminPage() {
@@ -260,105 +261,109 @@ export default function AdminPage() {
                                     <PlusCircle className="mr-2 h-4 w-4" /> Add News
                                 </Button>
                             </DialogTrigger>
-                            <DialogContent className="sm:max-w-[425px]">
+                            <DialogContent className="sm:max-w-xl max-h-[90vh] flex flex-col">
                                 <DialogHeader>
                                     <DialogTitle>Add New Article</DialogTitle>
                                 </DialogHeader>
-                                <form onSubmit={addForm.handleSubmit(onAddNews)} className="space-y-4">
-                                    <div>
-                                        <Label htmlFor="title">Title</Label>
-                                        <Input id="title" {...addForm.register('title')} />
-                                        {addForm.formState.errors.title && <p className="text-sm text-destructive">{addForm.formState.errors.title.message}</p>}
-                                    </div>
-                                    <div>
-                                        <Label htmlFor="category">Category</Label>
-                                        <Input id="category" {...addForm.register('category')} />
-                                        {addForm.formState.errors.category && <p className="text-sm text-destructive">{addForm.formState.errors.category.message}</p>}
-                                    </div>
-                                    <div>
-                                        <Label htmlFor="summary">Summary</Label>
-                                        <Textarea id="summary" {...addForm.register('summary')} />
-                                        {addForm.formState.errors.summary && <p className="text-sm text-destructive">{addForm.formState.errors.summary.message}</p>}
-                                    </div>
-                                    <div>
-                                        <Label htmlFor="content">Content</Label>
-                                        <Textarea id="content" {...addForm.register('content')} rows={5} />
-                                        {addForm.formState.errors.content && <p className="text-sm text-destructive">{addForm.formState.errors.content.message}</p>}
-                                    </div>
-                                    <div>
-                                        <Label htmlFor="imageUrl">Image URL</Label>
-                                        <Input id="imageUrl" {...addForm.register('imageUrl')} />
-                                        {addForm.formState.errors.imageUrl && <p className="text-sm text-destructive">{addForm.formState.errors.imageUrl.message}</p>}
-                                    </div>
-                                    <div>
-                                        <Label htmlFor="imageHint">Image Hint</Label>
-                                        <Input id="imageHint" {...addForm.register('imageHint')} />
-                                        {addForm.formState.errors.imageHint && <p className="text-sm text-destructive">{addForm.formState.errors.imageHint.message}</p>}
-                                    </div>
-                                    <div>
-                                        <Label htmlFor="time">Time (e.g., 2 hours ago)</Label>
-                                        <Input id="time" {...addForm.register('time')} />
-                                        {addForm.formState.errors.time && <p className="text-sm text-destructive">{addForm.formState.errors.time.message}</p>}
-                                    </div>
-                                    <DialogFooter>
-                                        <DialogClose asChild>
-                                        <Button type="button" variant="secondary">Cancel</Button>
-                                        </DialogClose>
-                                        <Button type="submit">Publish</Button>
-                                    </DialogFooter>
-                                </form>
+                                <ScrollArea className="flex-grow pr-6 -mr-6">
+                                    <form onSubmit={addForm.handleSubmit(onAddNews)} id="add-news-form" className="space-y-4">
+                                        <div>
+                                            <Label htmlFor="title">Title</Label>
+                                            <Input id="title" {...addForm.register('title')} />
+                                            {addForm.formState.errors.title && <p className="text-sm text-destructive">{addForm.formState.errors.title.message}</p>}
+                                        </div>
+                                        <div>
+                                            <Label htmlFor="category">Category</Label>
+                                            <Input id="category" {...addForm.register('category')} />
+                                            {addForm.formState.errors.category && <p className="text-sm text-destructive">{addForm.formState.errors.category.message}</p>}
+                                        </div>
+                                        <div>
+                                            <Label htmlFor="summary">Summary</Label>
+                                            <Textarea id="summary" {...addForm.register('summary')} />
+                                            {addForm.formState.errors.summary && <p className="text-sm text-destructive">{addForm.formState.errors.summary.message}</p>}
+                                        </div>
+                                        <div>
+                                            <Label htmlFor="content">Content</Label>
+                                            <Textarea id="content" {...addForm.register('content')} rows={5} />
+                                            {addForm.formState.errors.content && <p className="text-sm text-destructive">{addForm.formState.errors.content.message}</p>}
+                                        </div>
+                                        <div>
+                                            <Label htmlFor="imageUrl">Image URL</Label>
+                                            <Input id="imageUrl" {...addForm.register('imageUrl')} />
+                                            {addForm.formState.errors.imageUrl && <p className="text-sm text-destructive">{addForm.formState.errors.imageUrl.message}</p>}
+                                        </div>
+                                        <div>
+                                            <Label htmlFor="imageHint">Image Hint</Label>
+                                            <Input id="imageHint" {...addForm.register('imageHint')} />
+                                            {addForm.formState.errors.imageHint && <p className="text-sm text-destructive">{addForm.formState.errors.imageHint.message}</p>}
+                                        </div>
+                                        <div>
+                                            <Label htmlFor="time">Time (e.g., 2 hours ago)</Label>
+                                            <Input id="time" {...addForm.register('time')} />
+                                            {addForm.formState.errors.time && <p className="text-sm text-destructive">{addForm.formState.errors.time.message}</p>}
+                                        </div>
+                                    </form>
+                                </ScrollArea>
+                                <DialogFooter className="mt-4 flex-shrink-0">
+                                    <DialogClose asChild>
+                                    <Button type="button" variant="secondary">Cancel</Button>
+                                    </DialogClose>
+                                    <Button type="submit" form="add-news-form">Publish</Button>
+                                </DialogFooter>
                             </DialogContent>
                         </Dialog>
                         
                         {/* Edit News Dialog */}
                         <Dialog open={isEditNewsOpen} onOpenChange={setEditNewsOpen}>
-                          <DialogContent className="sm:max-w-[425px]">
+                          <DialogContent className="sm:max-w-xl max-h-[90vh] flex flex-col">
                             <DialogHeader>
                               <DialogTitle>Edit Article</DialogTitle>
                             </DialogHeader>
-                            <form onSubmit={editForm.handleSubmit(onEditNews)} className="space-y-4">
-                              <div>
-                                <Label htmlFor="edit-title">Title</Label>
-                                <Input id="edit-title" {...editForm.register('title')} />
-                                {editForm.formState.errors.title && <p className="text-sm text-destructive">{editForm.formState.errors.title.message}</p>}
-                              </div>
-                              <div>
-                                <Label htmlFor="edit-category">Category</Label>
-                                <Input id="edit-category" {...editForm.register('category')} />
-                                {editForm.formState.errors.category && <p className="text-sm text-destructive">{editForm.formState.errors.category.message}</p>}
-                              </div>
-                              <div>
-                                <Label htmlFor="edit-summary">Summary</Label>
-                                <Textarea id="edit-summary" {...editForm.register('summary')} />
-                                {editForm.formState.errors.summary && <p className="text-sm text-destructive">{editForm.formState.errors.summary.message}</p>}
-                              </div>
-                              <div>
-                                <Label htmlFor="edit-content">Content</Label>
-                                <Textarea id="edit-content" {...editForm.register('content')} rows={5} />
-                                {editForm.formState.errors.content && <p className="text-sm text-destructive">{editForm.formState.errors.content.message}</p>}
-                              </div>
-                              <div>
-                                <Label htmlFor="edit-imageUrl">Image URL</Label>
-                                <Input id="edit-imageUrl" {...editForm.register('imageUrl')} />
-                                {editForm.formState.errors.imageUrl && <p className="text-sm text-destructive">{editForm.formState.errors.imageUrl.message}</p>}
-                              </div>
-                              <div>
-                                <Label htmlFor="edit-imageHint">Image Hint</Label>
-                                <Input id="edit-imageHint" {...editForm.register('imageHint')} />
-                                {editForm.formState.errors.imageHint && <p className="text-sm text-destructive">{editForm.formState.errors.imageHint.message}</p>}
-                              </div>
-                              <div>
-                                <Label htmlFor="edit-time">Time (e.g., 2 hours ago)</Label>
-                                <Input id="edit-time" {...editForm.register('time')} />
-                                {editForm.formState.errors.time && <p className="text-sm text-destructive">{editForm.formState.errors.time.message}</p>}
-                              </div>
-                              <DialogFooter>
+                            <ScrollArea className="flex-grow pr-6 -mr-6">
+                              <form onSubmit={editForm.handleSubmit(onEditNews)} id="edit-news-form" className="space-y-4">
+                                <div>
+                                  <Label htmlFor="edit-title">Title</Label>
+                                  <Input id="edit-title" {...editForm.register('title')} />
+                                  {editForm.formState.errors.title && <p className="text-sm text-destructive">{editForm.formState.errors.title.message}</p>}
+                                </div>
+                                <div>
+                                  <Label htmlFor="edit-category">Category</Label>
+                                  <Input id="edit-category" {...editForm.register('category')} />
+                                  {editForm.formState.errors.category && <p className="text-sm text-destructive">{editForm.formState.errors.category.message}</p>}
+                                </div>
+                                <div>
+                                  <Label htmlFor="edit-summary">Summary</Label>
+                                  <Textarea id="edit-summary" {...editForm.register('summary')} />
+                                  {editForm.formState.errors.summary && <p className="text-sm text-destructive">{editForm.formState.errors.summary.message}</p>}
+                                </div>
+                                <div>
+                                  <Label htmlFor="edit-content">Content</Label>
+                                  <Textarea id="edit-content" {...editForm.register('content')} rows={5} />
+                                  {editForm.formState.errors.content && <p className="text-sm text-destructive">{editForm.formState.errors.content.message}</p>}
+                                </div>
+                                <div>
+                                  <Label htmlFor="edit-imageUrl">Image URL</Label>
+                                  <Input id="edit-imageUrl" {...editForm.register('imageUrl')} />
+                                  {editForm.formState.errors.imageUrl && <p className="text-sm text-destructive">{editForm.formState.errors.imageUrl.message}</p>}
+                                </div>
+                                <div>
+                                  <Label htmlFor="edit-imageHint">Image Hint</Label>
+                                  <Input id="edit-imageHint" {...editForm.register('imageHint')} />
+                                  {editForm.formState.errors.imageHint && <p className="text-sm text-destructive">{editForm.formState.errors.imageHint.message}</p>}
+                                </div>
+                                <div>
+                                  <Label htmlFor="edit-time">Time (e.g., 2 hours ago)</Label>
+                                  <Input id="edit-time" {...editForm.register('time')} />
+                                  {editForm.formState.errors.time && <p className="text-sm text-destructive">{editForm.formState.errors.time.message}</p>}
+                                </div>
+                              </form>
+                            </ScrollArea>
+                            <DialogFooter className="mt-4 flex-shrink-0">
                                 <DialogClose asChild>
                                   <Button type="button" variant="secondary" onClick={() => setEditNewsOpen(false)}>Cancel</Button>
                                 </DialogClose>
-                                <Button type="submit">Save Changes</Button>
-                              </DialogFooter>
-                            </form>
+                                <Button type="submit" form="edit-news-form">Save Changes</Button>
+                            </DialogFooter>
                           </DialogContent>
                         </Dialog>
                         </>
@@ -469,5 +474,3 @@ export default function AdminPage() {
     </div>
   );
 }
-
-    
