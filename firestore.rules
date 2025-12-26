@@ -7,6 +7,13 @@ service cloud.firestore {
     function isOwner(docId) {
       return request.auth != null && request.auth.uid == get(/databases/$(database)/documents/news/$(docId)).data.creatorId;
     }
+    
+    // Helper function to check if the user is an admin.
+    function isAdmin() {
+      // In a real app, you'd use custom claims. For now, we'll check the UID.
+      // Make sure to set up custom claims for production.
+      return request.auth != null && request.auth.token.email == "roopanrohith320@gmail.com";
+    }
 
     // Helper function to check if the user is authenticated.
     function isAuthenticated() {
@@ -23,11 +30,17 @@ service cloud.firestore {
       // Anyone can read news articles.
       allow read: if true;
 
-      // Authenticated users can create articles if they set themselves as the creator.
-      allow create: if isAuthenticated() && isCreatingAsSelf();
-      
-      // The owner of the article can update or delete it.
-      allow update, delete: if isOwner(newsId);
+      // Authenticated admins can create, update, or delete articles.
+      allow create, update, delete: if isAdmin();
+    }
+    
+    // Rules for the 'newspapers' collection
+    match /newspapers/{newspaperId} {
+        // Anyone can read (download) newspapers.
+        allow read: if true;
+        
+        // Admins can upload (create) and delete newspapers.
+        allow create, delete: if isAdmin();
     }
   }
 }

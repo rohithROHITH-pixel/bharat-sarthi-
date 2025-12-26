@@ -44,6 +44,31 @@
         }
       },
       "required": ["title", "content", "category", "summary", "imageUrl", "imageHint", "time", "creatorId", "createdAt"]
+    },
+    "newspaper": {
+      "title": "Daily Newspaper",
+      "description": "A daily newspaper edition, usually a PDF.",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "The title or date of the newspaper."
+        },
+        "url": {
+          "type": "string",
+          "description": "The URL of the uploaded PDF file in Firebase Storage."
+        },
+        "creatorId": {
+          "type": "string",
+          "description": "The UID of the user who uploaded the newspaper."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The timestamp when the newspaper was uploaded."
+        }
+      },
+      "required": ["title", "url", "creatorId", "createdAt"]
     }
   },
   "auth": {
@@ -60,6 +85,12 @@
         "$ref": "#/entities/news"
       },
       "description": "A collection of news articles."
+    },
+    "/newspapers/{newspaperId}": {
+      "schema": {
+        "$ref": "#/entities/newspaper"
+      },
+      "description": "A collection of daily newspaper PDFs."
     }
   }
 }
