@@ -5,22 +5,15 @@ import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Clock } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
-import { useDoc, useFirestore } from '@/firebase';
-import { doc } from 'firebase/firestore';
+import { useDoc } from '@/firebase';
 import { NewsArticle } from '@/lib/news-data';
-import { useMemo } from 'react';
 
 export default function NewsArticlePage() {
   const params = useParams();
-  const firestore = useFirestore();
   const articleId = typeof params.id === 'string' ? params.id : '';
 
-  const articleRef = useMemo(() => {
-      if (!firestore || !articleId) return null;
-      return doc(firestore, 'news', articleId);
-  }, [firestore, articleId]);
-  
-  const { data: article, loading, error } = useDoc<NewsArticle>(articleRef);
+  const { data: article, loading, error } = useDoc<NewsArticle>(articleId ? `news/${articleId}` : null);
+
 
   if (loading) {
     return (

@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import {
   doc,
   onSnapshot,
@@ -8,30 +8,38 @@ import {
   FirestoreError,
   DocumentSnapshot,
 } from 'firebase/firestore';
+import { useFirestore } from '../provider';
 
 export interface UseDocOptions<T> {
   // Define any options here
 }
 
 export function useDoc<T>(
-  ref: DocumentReference<T, DocumentData> | null,
+  path: string | null,
   options?: UseDocOptions<T>
 ) {
+  const firestore = useFirestore();
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<FirestoreError | null>(null);
   
-  const refRef = useRef(ref);
-  refRef.current = ref;
+  const docRef = useMemo(() => {
+    if (!firestore || !path) return null;
+    return doc(firestore, path) as DocumentReference<T, DocumentData>;
+  }, [firestore, path]);
+
 
   useEffect(() => {
-    if (!refRef.current) {
+    if (!docRef) {
+      setData(null);
       setLoading(false);
       return;
     }
+    
+    setLoading(true);
 
     const unsubscribe = onSnapshot(
-      refRef.current,
+      docRef,
       (snapshot: DocumentSnapshot<T>) => {
         if (snapshot.exists()) {
           setData({ id: snapshot.id, ...snapshot.data() });
@@ -48,7 +56,7 @@ export function useDoc<T>(
     );
 
     return () => unsubscribe();
-  }, [refRef.current]);
+  }, [docRef]);
 
   return { data, loading, error };
 }
