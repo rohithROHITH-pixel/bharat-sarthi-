@@ -42,18 +42,9 @@ export default function NewsArticlePage() {
             <h1 className="text-3xl md:text-4xl font-bold font-headline mb-6 text-primary">
                 {article.title}
             </h1>
-            <div className="prose prose-lg max-w-none text-foreground/80 leading-relaxed">
-                <p>{article.summary}</p>
-                 {/* This is a placeholder for more content. 
-                     In a real app, you'd have a 'content' field in your data. 
-                */}
-                <p>
-                    {article.summary}
-                </p>
-                <p>
-                    {article.summary}
-                </p>
-
+            <div className="prose prose-lg max-w-none text-foreground/80 leading-relaxed space-y-4">
+                <p className="font-semibold text-lg text-foreground/90">{article.summary}</p>
+                <p>{article.content}</p>
             </div>
         </CardContent>
       </Card>
