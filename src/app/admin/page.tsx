@@ -1,8 +1,8 @@
 'use client';
 
-import { useAuth } from '@/context/auth-context';
+import { useUser, useAuth } from '@/firebase';
 import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,19 +10,51 @@ import NewsList from '@/components/news-list';
 import { PlusCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Label } from '@/components/ui/label';
-import { newsItems } from '@/lib/news-data';
+import { useCollection } from '@/firebase';
+import { collection, deleteDoc, doc, addDoc, serverTimestamp } from 'firebase/firestore';
+import { useFirestore } from '@/firebase';
+import { NewsArticle, newsSchema } from '@/lib/news-data';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogClose,
+} from '@/components/ui/dialog';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Textarea } from '@/components/ui/textarea';
 
 export default function AdminPage() {
-  const { user, loading } = useAuth();
+  const { user, loading, claims } = useUser();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const auth = getAuth();
+  const auth = useAuth();
   const { toast } = useToast();
+  const firestore = useFirestore();
+
+  const { data: newsItems, loading: newsLoading, error: newsError } = useCollection<NewsArticle>(
+    firestore ? collection(firestore, 'news') : null
+  );
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<NewsArticle>({
+    resolver: zodResolver(newsSchema),
+  });
+
+  const [isAddNewsOpen, setAddNewsOpen] = useState(false);
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
+    if (!auth) return;
     try {
       await signInWithEmailAndPassword(auth, email, password);
       toast({ title: 'Login Successful', description: 'Welcome back!' });
@@ -32,9 +64,38 @@ export default function AdminPage() {
   };
 
   const handleLogout = async () => {
+    if (!auth) return;
     await signOut(auth);
     toast({ title: 'Logged Out', description: 'You have been successfully logged out.' });
   };
+
+  const onAddNews: SubmitHandler<NewsArticle> = async (data) => {
+    if (!firestore || !user) return;
+    try {
+      await addDoc(collection(firestore, 'news'), {
+        ...data,
+        id: '', // Firestore will generate an ID
+        creatorId: user.uid,
+        createdAt: serverTimestamp(),
+      });
+      toast({ title: 'News Added', description: 'The new article has been published.' });
+      reset();
+      setAddNewsOpen(false);
+    } catch (e: any) {
+      toast({ variant: 'destructive', title: 'Error', description: 'Could not add news article.' });
+    }
+  };
+  
+  const handleDelete = async (id: string) => {
+    if (!firestore) return;
+    try {
+      await deleteDoc(doc(firestore, 'news', id));
+      toast({ title: 'News Deleted', description: 'The article has been removed.' });
+    } catch (e: any) {
+      toast({ variant: 'destructive', title: 'Error', description: 'Could not delete article.' });
+    }
+  };
+
 
   if (loading) {
     return (
@@ -47,7 +108,7 @@ export default function AdminPage() {
     );
   }
 
-  if (!user) {
+  if (!user || !claims.admin) {
     return (
       <div className="container mx-auto px-4 py-8 flex justify-center items-center min-h-[calc(100vh-20rem)]">
         <Card className="w-full max-w-md">
@@ -56,6 +117,12 @@ export default function AdminPage() {
             <CardDescription>Enter your credentials to access the admin panel.</CardDescription>
           </CardHeader>
           <CardContent>
+            {claims.loaded && user && !claims.admin && (
+                <div className="mb-4 text-center text-destructive bg-destructive/10 p-3 rounded-md">
+                    <p className="font-bold">Access Denied</p>
+                    <p className="text-sm">You do not have administrative privileges.</p>
+                </div>
+            )}
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
@@ -100,11 +167,65 @@ export default function AdminPage() {
       <div className='space-y-8'>
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <h2 className="text-2xl font-bold text-center sm:text-left w-full sm:w-auto">Manage News</h2>
-            <Button className="w-full sm:w-auto">
-                <PlusCircle className="mr-2 h-4 w-4" /> Add News
-            </Button>
+            <Dialog open={isAddNewsOpen} onOpenChange={setAddNewsOpen}>
+                <DialogTrigger asChild>
+                    <Button className="w-full sm:w-auto">
+                        <PlusCircle className="mr-2 h-4 w-4" /> Add News
+                    </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>Add New Article</DialogTitle>
+                    </DialogHeader>
+                    <form onSubmit={handleSubmit(onAddNews)} className="space-y-4">
+                        <div>
+                            <Label htmlFor="title">Title</Label>
+                            <Input id="title" {...register('title')} />
+                            {errors.title && <p className="text-sm text-destructive">{errors.title.message}</p>}
+                        </div>
+                        <div>
+                            <Label htmlFor="category">Category</Label>
+                            <Input id="category" {...register('category')} />
+                            {errors.category && <p className="text-sm text-destructive">{errors.category.message}</p>}
+                        </div>
+                        <div>
+                            <Label htmlFor="summary">Summary</Label>
+                            <Textarea id="summary" {...register('summary')} />
+                            {errors.summary && <p className="text-sm text-destructive">{errors.summary.message}</p>}
+                        </div>
+                        <div>
+                            <Label htmlFor="content">Content</Label>
+                            <Textarea id="content" {...register('content')} rows={5} />
+                            {errors.content && <p className="text-sm text-destructive">{errors.content.message}</p>}
+                        </div>
+                        <div>
+                            <Label htmlFor="imageUrl">Image URL</Label>
+                            <Input id="imageUrl" {...register('imageUrl')} />
+                             {errors.imageUrl && <p className="text-sm text-destructive">{errors.imageUrl.message}</p>}
+                        </div>
+                        <div>
+                            <Label htmlFor="imageHint">Image Hint</Label>
+                            <Input id="imageHint" {...register('imageHint')} />
+                            {errors.imageHint && <p className="text-sm text-destructive">{errors.imageHint.message}</p>}
+                        </div>
+                        <div>
+                            <Label htmlFor="time">Time (e.g., 2 hours ago)</Label>
+                            <Input id="time" {...register('time')} />
+                            {errors.time && <p className="text-sm text-destructive">{errors.time.message}</p>}
+                        </div>
+                        <DialogFooter>
+                            <DialogClose asChild>
+                               <Button type="button" variant="secondary">Cancel</Button>
+                            </DialogClose>
+                            <Button type="submit">Publish</Button>
+                        </DialogFooter>
+                    </form>
+                </DialogContent>
+            </Dialog>
         </div>
-        <NewsList isAdmin={true} newsItems={newsItems} />
+        {newsLoading && <p>Loading news...</p>}
+        {newsError && <p className="text-destructive">Error loading news: {newsError.message}</p>}
+        {newsItems && <NewsList isAdmin={true} newsItems={newsItems} onDelete={handleDelete} />}
       </div>
     </div>
   );

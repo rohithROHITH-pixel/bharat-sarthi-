@@ -3,11 +3,12 @@ import './globals.css';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
 import { Toaster } from '@/components/ui/toaster';
-import { AuthProvider } from '@/context/auth-context';
+import { FirebaseClientProvider } from '@/firebase/client-provider';
+import { UserProvider } from '@/firebase/auth/use-user';
 
 export const metadata: Metadata = {
-  title: 'Bharatha Sarathi - Astrology Services',
-  description: 'Expert astrology services to guide you on your life path.',
+  title: 'Sarathi News',
+  description: 'Your daily dose of news, clean and fast.',
 };
 
 export default function RootLayout({
@@ -23,16 +24,18 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body bg-background text-foreground antialiased">
-        <AuthProvider>
-          <div className="flex min-h-screen flex-col">
-            <Header />
-            <main className="flex-grow">
-              {children}
-            </main>
-            <Footer />
-          </div>
-          <Toaster />
-        </AuthProvider>
+        <FirebaseClientProvider>
+          <UserProvider>
+            <div className="flex min-h-screen flex-col">
+              <Header />
+              <main className="flex-grow">
+                {children}
+              </main>
+              <Footer />
+            </div>
+            <Toaster />
+          </UserProvider>
+        </FirebaseClientProvider>
       </body>
     </html>
   );

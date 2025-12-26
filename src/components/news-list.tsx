@@ -8,18 +8,16 @@ import { Button } from './ui/button';
 import { Pencil, Trash2 } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from './ui/alert-dialog';
 import { type NewsArticle } from '@/lib/news-data';
+import { useUser } from '@/firebase';
 
 type NewsListProps = {
   newsItems: NewsArticle[];
   isAdmin?: boolean;
+  onDelete?: (id: string) => void;
 };
 
-export default function NewsList({ newsItems, isAdmin = false }: NewsListProps) {
-    const handleDelete = (id: number) => {
-        // Here you would typically call an API to delete the news item.
-        // For this example, we'll just log it.
-        console.log(`Deleting news item with id: ${id}`);
-    };
+export default function NewsList({ newsItems, isAdmin = false, onDelete }: NewsListProps) {
+    const { claims } = useUser();
 
     if (!newsItems || newsItems.length === 0) {
         return (
@@ -53,7 +51,7 @@ export default function NewsList({ newsItems, isAdmin = false }: NewsListProps) 
                             </CardTitle>
                         </CardHeader>
                     </div>
-                    {isAdmin && (
+                    {isAdmin && claims.admin && (
                         <CardFooter className="border-t p-2 bg-secondary/50">
                             <div className="flex w-full justify-end gap-2">
                                 <Button variant="outline" size="sm">
@@ -74,7 +72,7 @@ export default function NewsList({ newsItems, isAdmin = false }: NewsListProps) 
                                         </AlertDialogHeader>
                                         <AlertDialogFooter>
                                             <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                            <AlertDialogAction onClick={() => handleDelete(item.id)}>
+                                            <AlertDialogAction onClick={() => onDelete?.(item.id)}>
                                                 Continue
                                             </AlertDialogAction>
                                         </AlertDialogFooter>

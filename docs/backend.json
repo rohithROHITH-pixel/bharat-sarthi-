@@ -1,0 +1,65 @@
+{
+  "entities": {
+    "news": {
+      "title": "News Article",
+      "description": "A news article with a title, content, and category.",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "The title of the news article."
+        },
+        "content": {
+          "type": "string",
+          "description": "The main content of the news article."
+        },
+        "category": {
+          "type": "string",
+          "description": "The category of the news article (e.g., Sports, Politics)."
+        },
+        "summary": {
+          "type": "string",
+          "description": "A short summary of the article."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL for the article's main image."
+        },
+        "imageHint": {
+          "type": "string",
+          "description": "A hint for AI image generation."
+        },
+        "time": {
+            "type": "string",
+            "description": "Relative time of publishing."
+        },
+        "creatorId": {
+          "type": "string",
+          "description": "The UID of the user who created the article."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The timestamp when the article was created."
+        }
+      },
+      "required": ["title", "content", "category", "summary", "imageUrl", "imageHint", "time", "creatorId", "createdAt"]
+    }
+  },
+  "auth": {
+    "providers": ["email-password"],
+    "customClaims": {
+        "admin": {
+            "type": "boolean"
+        }
+    }
+  },
+  "firestore": {
+    "/news/{newsId}": {
+      "schema": {
+        "$ref": "#/entities/news"
+      },
+      "description": "A collection of news articles."
+    }
+  }
+}
