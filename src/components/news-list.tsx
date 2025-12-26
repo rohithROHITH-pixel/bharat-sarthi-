@@ -34,20 +34,22 @@ export default function NewsList({ newsItems, isAdmin = false }: NewsListProps) 
             {newsItems.map((item) => (
                 <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-shadow flex flex-col group">
                     <div className='flex-grow'>
-                        <div className="relative h-48 w-full overflow-hidden">
-                            <Image
-                                src={item.imageUrl}
-                                alt={item.title}
-                                fill
-                                className="object-cover group-hover:scale-105 transition-transform duration-300"
-                                data-ai-hint={item.imageHint}
-                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                            />
-                        </div>
+                        <Link href={`/news/${item.id}`} className='block'>
+                            <div className="relative h-48 w-full overflow-hidden">
+                                <Image
+                                    src={item.imageUrl}
+                                    alt={item.title}
+                                    fill
+                                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                                    data-ai-hint={item.imageHint}
+                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                                />
+                            </div>
+                        </Link>
                         <CardHeader className="p-4">
                             <Badge variant="secondary" className="mb-2 w-fit text-xs">{item.category}</Badge>
                             <CardTitle className="text-md font-bold leading-snug line-clamp-2">
-                                <Link href="#" className="hover:text-primary transition-colors">{item.title}</Link>
+                                <Link href={`/news/${item.id}`} className="hover:text-primary transition-colors">{item.title}</Link>
                             </CardTitle>
                         </CardHeader>
                     </div>

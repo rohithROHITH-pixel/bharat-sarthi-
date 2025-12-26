@@ -40,15 +40,17 @@ export default function HeroSection({ article }: HeroProps) {
       <div className="relative z-10 container mx-auto px-4 text-center md:text-left md:w-2/3 lg:w-1/2 pt-20">
         <div className="space-y-4">
             <Badge variant="default" className="text-sm">{article.category}</Badge>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-headline font-bold text-shadow-lg leading-tight">
-                {article.title}
-            </h1>
+            <Link href={`/news/${article.id}`}>
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-headline font-bold text-shadow-lg leading-tight hover:text-primary transition-colors">
+                  {article.title}
+              </h1>
+            </Link>
             <p className="text-base md:text-lg text-gray-200 hidden sm:line-clamp-3">
                 {article.summary}
             </p>
             <div className="flex gap-4 justify-center md:justify-start">
                 <Button asChild size="lg">
-                    <Link href="#">Read More</Link>
+                    <Link href={`/news/${article.id}`}>Read More</Link>
                 </Button>
             </div>
         </div>
