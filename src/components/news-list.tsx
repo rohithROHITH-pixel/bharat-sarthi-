@@ -16,7 +16,7 @@ type NewsListProps = {
   isAdmin?: boolean;
 };
 
-export default function NewsList({ newsItems, onDelete, onEdit, isAdmin }: NewsListProps) {
+export default function NewsList({ newsItems, onDelete, onEdit, isAdmin = false }: NewsListProps) {
     if (!newsItems || newsItems.length === 0) {
         return (
             <div className="col-span-full text-center py-12">
@@ -90,3 +90,5 @@ export default function NewsList({ newsItems, onDelete, onEdit, isAdmin }: NewsL
         </div>
     );
 }
+
+    

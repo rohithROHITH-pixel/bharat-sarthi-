@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import NewsList from '@/components/news-list';
-import { PlusCircle, Upload, Trash2, FileText, Link as LinkIcon, RefreshCw } from 'lucide-react';
+import { PlusCircle, Upload, Trash2, FileText, Link as LinkIcon, RefreshCw, ShieldAlert } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Label } from '@/components/ui/label';
 import { useCollection } from '@/firebase';
@@ -72,11 +72,10 @@ export default function AdminPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    // Wait until loading is finished and claims are loaded
-    if (!loading && claims.loaded && !user) {
+    if (!loading && !user) {
       router.push('/login');
     }
-  }, [user, claims, loading, router]);
+  }, [user, loading, router]);
   
   const handleSeedData = async () => {
     if (!firestore || !user) return;
@@ -226,11 +225,23 @@ export default function AdminPage() {
         <div className='text-center sm:text-left'>
           <h1 className="text-3xl font-bold">Content Dashboard</h1>
            <p className="text-muted-foreground">
-            {isAdmin ? `Welcome back, Admin (${user.email}).` : `Welcome, ${user.email}.`}
+            {isAdmin ? `Welcome back, Admin (${user.email}).` : `Welcome, Reader (${user.email}).`}
           </p>
         </div>
         <Button onClick={handleLogout} className="w-full sm:w-auto">Logout</Button>
       </div>
+
+       {!isAdmin && (
+        <Card className="mb-8 border-yellow-500 bg-yellow-50/50">
+          <CardHeader className='flex-row items-center gap-4 space-y-0'>
+            <ShieldAlert className='w-8 h-8 text-yellow-600' />
+            <div>
+              <CardTitle className='text-lg text-yellow-800'>Reader Mode</CardTitle>
+              <CardDescription className='text-yellow-700'>You are viewing this page as a reader. You do not have permissions to add, edit, or delete content.</CardDescription>
+            </div>
+          </CardHeader>
+        </Card>
+      )}
       
       <div className='space-y-12'>
         {/* News Management */}
@@ -458,3 +469,5 @@ export default function AdminPage() {
     </div>
   );
 }
+
+    
