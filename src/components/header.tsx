@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { Button } from './ui/button';
 import { Menu, X, Moon, Sun, ChevronDown, Phone, Mail, Bell, LogIn } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 import { useUser } from '@/firebase';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from '@/components/ui/dialog';
 import { Input } from './ui/input';
@@ -15,20 +14,8 @@ import { useToast } from '@/hooks/use-toast';
 
 const navLinks = [
   { href: '/', label: 'HOME' },
-  { href: '#about', label: 'ABOUT US' },
-  { href: '#international', label: 'ಅಂತಾರಾಷ್ಟ್ರೀಯ' },
-  { href: '#health', label: 'ಆರೋಗ್ಯ' },
-  { href: '#sports', label: 'ಕ್ರೀಡೆ' },
-  { href: '#crime', label: 'ಕ್ರೈಂ ಸುದ್ದಿ' },
-  { href: '#politics', label: 'ರಾಜಕೀಯ' },
-  { href: '#state', label: 'ರಾಜ್ಯ ಸುದ್ದಿ' },
+  { href: '#epaper', label: 'ಇ-ಪೇಪರ್' },
 ];
-
-const moreLinks = [
-    { href: '#tech', label: 'ತಂತ್ರಜ್ಞಾನ'},
-    { href: '#business', label: 'ವ್ಯಾಪಾರ'},
-    { href: '#entertainment', label: 'ಮನರಂಜನೆ'},
-]
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -115,25 +102,6 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="text-sm font-medium uppercase hover:bg-primary hover:text-white data-[state=open]:bg-primary">
-                  MORE <ChevronDown className="ml-1 h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-gray-900 text-white border-gray-700">
-                {moreLinks.map(link => (
-                    <DropdownMenuItem key={link.href} asChild>
-                        <Link href={link.href} className="hover:bg-primary focus:bg-primary">
-                            {link.label}
-                        </Link>
-                    </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <Link href="#epaper" className="px-3 py-2 text-sm font-medium uppercase hover:bg-primary hover:text-white transition-colors">
-              ಇ-ಪೇಪರ್
-            </Link>
           </nav>
 
           <div className="flex items-center justify-end md:justify-start flex-1 md:flex-none">
@@ -210,7 +178,7 @@ export default function Header() {
                           </Button>
                       </div>
                       <nav className="flex flex-col space-y-4">
-                          {[...navLinks, ...moreLinks, {href: '#epaper', label: 'ಇ-ಪೇಪರ್'}].map((link) => (
+                          {navLinks.map((link) => (
                           <Link
                               key={link.href}
                               href={link.href}
