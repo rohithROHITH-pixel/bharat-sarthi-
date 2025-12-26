@@ -27,7 +27,6 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Textarea } from '@/components/ui/textarea';
 
-const ADMIN_USER_ID = "LDvQPgjj26PAoWzyBHm6aNe3vsv2";
 const ADMIN_USER_EMAIL = "roopanrohith320@gmail.com";
 
 export default function AdminPage() {
@@ -39,7 +38,7 @@ export default function AdminPage() {
   const { toast } = useToast();
   const firestore = useFirestore();
 
-  const isAdmin = user?.uid === ADMIN_USER_ID && user?.email === ADMIN_USER_EMAIL;
+  const isAdmin = user?.email === ADMIN_USER_EMAIL;
 
   const { data: newsItems, loading: newsLoading, error: newsError } = useCollection<NewsArticle>(
     firestore ? query(collection(firestore, 'news'), orderBy('createdAt', 'desc')) : null
@@ -176,66 +175,68 @@ export default function AdminPage() {
                         <Upload className="mr-2 h-4 w-4" /> Upload Daily News Paper
                     </Button>
                 )}
-                <Dialog open={isAddNewsOpen} onOpenChange={setAddNewsOpen}>
-                    <DialogTrigger asChild>
-                        <Button className="w-full sm:w-auto">
-                            <PlusCircle className="mr-2 h-4 w-4" /> Add News
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
-                        <DialogHeader>
-                            <DialogTitle>Add New Article</DialogTitle>
-                        </DialogHeader>
-                        <form onSubmit={handleSubmit(onAddNews)} className="space-y-4">
-                            <div>
-                                <Label htmlFor="title">Title</Label>
-                                <Input id="title" {...register('title')} />
-                                {errors.title && <p className="text-sm text-destructive">{errors.title.message}</p>}
-                            </div>
-                            <div>
-                                <Label htmlFor="category">Category</Label>
-                                <Input id="category" {...register('category')} />
-                                {errors.category && <p className="text-sm text-destructive">{errors.category.message}</p>}
-                            </div>
-                            <div>
-                                <Label htmlFor="summary">Summary</Label>
-                                <Textarea id="summary" {...register('summary')} />
-                                {errors.summary && <p className="text-sm text-destructive">{errors.summary.message}</p>}
-                            </div>
-                            <div>
-                                <Label htmlFor="content">Content</Label>
-                                <Textarea id="content" {...register('content')} rows={5} />
-                                {errors.content && <p className="text-sm text-destructive">{errors.content.message}</p>}
-                            </div>
-                            <div>
-                                <Label htmlFor="imageUrl">Image URL</Label>
-                                <Input id="imageUrl" {...register('imageUrl')} />
-                                 {errors.imageUrl && <p className="text-sm text-destructive">{errors.imageUrl.message}</p>}
-                            </div>
-                            <div>
-                                <Label htmlFor="imageHint">Image Hint</Label>
-                                <Input id="imageHint" {...register('imageHint')} />
-                                {errors.imageHint && <p className="text-sm text-destructive">{errors.imageHint.message}</p>}
-                            </div>
-                            <div>
-                                <Label htmlFor="time">Time (e.g., 2 hours ago)</Label>
-                                <Input id="time" {...register('time')} />
-                                {errors.time && <p className="text-sm text-destructive">{errors.time.message}</p>}
-                            </div>
-                            <DialogFooter>
-                                <DialogClose asChild>
-                                   <Button type="button" variant="secondary">Cancel</Button>
-                                </DialogClose>
-                                <Button type="submit">Publish</Button>
-                            </DialogFooter>
-                        </form>
-                    </DialogContent>
-                </Dialog>
+                {isAdmin && (
+                    <Dialog open={isAddNewsOpen} onOpenChange={setAddNewsOpen}>
+                        <DialogTrigger asChild>
+                            <Button className="w-full sm:w-auto">
+                                <PlusCircle className="mr-2 h-4 w-4" /> Add News
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px]">
+                            <DialogHeader>
+                                <DialogTitle>Add New Article</DialogTitle>
+                            </DialogHeader>
+                            <form onSubmit={handleSubmit(onAddNews)} className="space-y-4">
+                                <div>
+                                    <Label htmlFor="title">Title</Label>
+                                    <Input id="title" {...register('title')} />
+                                    {errors.title && <p className="text-sm text-destructive">{errors.title.message}</p>}
+                                </div>
+                                <div>
+                                    <Label htmlFor="category">Category</Label>
+                                    <Input id="category" {...register('category')} />
+                                    {errors.category && <p className="text-sm text-destructive">{errors.category.message}</p>}
+                                </div>
+                                <div>
+                                    <Label htmlFor="summary">Summary</Label>
+                                    <Textarea id="summary" {...register('summary')} />
+                                    {errors.summary && <p className="text-sm text-destructive">{errors.summary.message}</p>}
+                                </div>
+                                <div>
+                                    <Label htmlFor="content">Content</Label>
+                                    <Textarea id="content" {...register('content')} rows={5} />
+                                    {errors.content && <p className="text-sm text-destructive">{errors.content.message}</p>}
+                                </div>
+                                <div>
+                                    <Label htmlFor="imageUrl">Image URL</Label>
+                                    <Input id="imageUrl" {...register('imageUrl')} />
+                                     {errors.imageUrl && <p className="text-sm text-destructive">{errors.imageUrl.message}</p>}
+                                </div>
+                                <div>
+                                    <Label htmlFor="imageHint">Image Hint</Label>
+                                    <Input id="imageHint" {...register('imageHint')} />
+                                    {errors.imageHint && <p className="text-sm text-destructive">{errors.imageHint.message}</p>}
+                                </div>
+                                <div>
+                                    <Label htmlFor="time">Time (e.g., 2 hours ago)</Label>
+                                    <Input id="time" {...register('time')} />
+                                    {errors.time && <p className="text-sm text-destructive">{errors.time.message}</p>}
+                                </div>
+                                <DialogFooter>
+                                    <DialogClose asChild>
+                                       <Button type="button" variant="secondary">Cancel</Button>
+                                    </DialogClose>
+                                    <Button type="submit">Publish</Button>
+                                </DialogFooter>
+                            </form>
+                        </DialogContent>
+                    </Dialog>
+                )}
             </div>
         </div>
         {newsLoading && <p>Loading news...</p>}
         {newsError && <p className="text-destructive">Error loading news: {newsError.message}</p>}
-        {newsItems && <NewsList newsItems={newsItems} onDelete={handleDelete} />}
+        {newsItems && <NewsList newsItems={newsItems} onDelete={isAdmin ? handleDelete : undefined} isAdmin={isAdmin} />}
       </div>
     </div>
   );

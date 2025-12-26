@@ -13,11 +13,10 @@ import { useUser } from '@/firebase';
 type NewsListProps = {
   newsItems: NewsArticle[];
   onDelete?: (id: string) => void;
+  isAdmin?: boolean;
 };
 
-export default function NewsList({ newsItems, onDelete }: NewsListProps) {
-    const { user } = useUser();
-
+export default function NewsList({ newsItems, onDelete, isAdmin }: NewsListProps) {
     if (!newsItems || newsItems.length === 0) {
         return (
             <div className="col-span-full text-center py-12">
@@ -29,7 +28,6 @@ export default function NewsList({ newsItems, onDelete }: NewsListProps) {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {newsItems.map((item) => {
-                const isOwner = user && item.creatorId === user.uid;
                 return (
                     <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-shadow flex flex-col group">
                         <div className='flex-grow'>
@@ -52,7 +50,7 @@ export default function NewsList({ newsItems, onDelete }: NewsListProps) {
                                 </CardTitle>
                             </CardHeader>
                         </div>
-                        {isOwner && onDelete && (
+                        {isAdmin && onDelete && (
                             <CardFooter className="border-t p-2 bg-secondary/50">
                                 <div className="flex w-full justify-end gap-2">
                                     <Button variant="outline" size="sm">
