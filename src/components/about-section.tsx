@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { Button } from './ui/button';
+import Link from 'next/link';
 
 export default function AboutSection() {
   return (
@@ -7,22 +8,24 @@ export default function AboutSection() {
       <div className="container mx-auto">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
-            <h2 className="text-4xl md:text-5xl font-headline font-bold text-primary">ಸಾರಥಿ ಬಗ್ಗೆ</h2>
+            <h2 className="text-4xl md:text-5xl font-headline font-bold text-primary">About Bharatha Sarathi</h2>
             <p className="text-lg text-foreground/80 leading-relaxed">
-              ಭಾರತ ಸಾರಥಿ ಜ್ಯೋತಿಷ್ಯದ ಪ್ರಾಚೀನ ವಿಜ್ಞಾನದ ಮೂಲಕ ಜೀವನದ ಪಯಣದಲ್ಲಿ ಮಾರ್ಗದರ್ಶನ ನೀಡುತ್ತದೆ. ವರ್ಷಗಳ ಸಮರ್ಪಿತ ಅಭ್ಯಾಸ ಮತ್ತು ಆಳವಾದ ಜ್ಞಾನದೊಂದಿಗೆ, ನಾವು ವೈಯಕ್ತಿಕಗೊಳಿಸಿದ ಜಾತಕ ಓದುವಿಕೆ, ಸಂಖ್ಯಾಶಾಸ್ತ್ರದ ಒಳನೋಟಗಳು, ವಾಸ್ತು ಸಮಾಲೋಚನೆಗಳು ಮತ್ತು ಹಸ್ತಸಾಮುದ್ರಿಕ ವಿಶ್ಲೇಷಣೆಯನ್ನು ಒದಗಿಸುತ್ತೇವೆ.
+              Bharatha Sarathi is your trusted source for fast, reliable, and unbiased news. In an age of information overload, we are committed to delivering stories that matter, with the clarity and depth you deserve. Our mission is to keep you informed and engaged with the world around you.
             </p>
             <p className="text-lg text-foreground/80 leading-relaxed">
-              ನಮ್ಮ ಧ್ಯೇಯವೆಂದರೆ, ನೀವು ತಿಳುವಳಿಕೆಯುಳ್ಳ ನಿರ್ಧಾರಗಳನ್ನು ತೆಗೆದುಕೊಳ್ಳಲು, ಅಡೆತಡೆಗಳನ್ನು ನಿವಾರಿಸಲು ಮತ್ತು ನಿಮ್ಮ ನಿಜವಾದ ಸಾಮರ್ಥ್ಯವನ್ನು ಸಾಧಿಸಲು ಬೇಕಾದ ಸ್ಪಷ್ಟತೆ ಮತ್ತು ದೂರದೃಷ್ಟಿಯನ್ನು ನಿಮಗೆ ನೀಡುವುದಾಗಿದೆ. ಬ್ರಹ್ಮಾಂಡವು ನಮ್ಮ ಜೀವನಕ್ಕೆ ಕನ್ನಡಿಯನ್ನು ಹಿಡಿದಿದೆ ಎಂದು ನಾವು ನಂಬುತ್ತೇವೆ ಮತ್ತು ಅದರ ಭಾಷೆಯನ್ನು ಅರ್ಥಮಾಡಿಕೊಳ್ಳುವ ಮೂಲಕ, ನಾವು ಸಮೃದ್ಧಿ ಮತ್ತು ಶಾಂತಿಯ ಭವಿಷ್ಯವನ್ನು ಅನ್ಲಾಕ್ ಮಾಡಬಹುದು.
+              Founded on the principles of journalistic integrity, our dedicated team of reporters and editors works around the clock to bring you the latest developments from Karnataka, India, and across the globe. From politics and business to culture and sports, we provide comprehensive coverage that is both timely and insightful. We believe in the power of information to foster understanding and drive progress.
             </p>
-            <Button size="lg">Learn More</Button>
+            <Button size="lg" asChild>
+                <Link href="#contact">Contact Us</Link>
+            </Button>
           </div>
           <div className="relative h-80 md:h-96 w-full rounded-lg overflow-hidden shadow-2xl">
              <Image
-                src="https://picsum.photos/seed/astrology-about/600/800"
-                alt="Portrait of an astrologer"
+                src="https://picsum.photos/seed/news-room/800/600"
+                alt="Modern news room"
                 fill
                 className="object-cover"
-                data-ai-hint="astrologer portrait"
+                data-ai-hint="newsroom journalist"
               />
           </div>
         </div>
