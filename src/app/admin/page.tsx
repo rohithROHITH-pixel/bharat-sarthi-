@@ -26,17 +26,17 @@ import {
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Textarea } from '@/components/ui/textarea';
+import { useRouter } from 'next/navigation';
 
 const ADMIN_USER_EMAIL = "roopanrohith320@gmail.com";
 
 export default function AdminPage() {
   const { user, loading } = useUser();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const auth = useAuth();
   const { toast } = useToast();
   const firestore = useFirestore();
+  const router = useRouter();
 
   const isAdmin = user?.email === ADMIN_USER_EMAIL;
 
@@ -55,22 +55,11 @@ export default function AdminPage() {
 
   const [isAddNewsOpen, setAddNewsOpen] = useState(false);
 
-  const handleLogin = async (e: FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    if (!auth) return;
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      toast({ title: 'Login Successful', description: 'Welcome back!' });
-    } catch (err: any) {
-      setError('Invalid email or password. Please try again.');
-    }
-  };
-
   const handleLogout = async () => {
     if (!auth) return;
     await signOut(auth);
     toast({ title: 'Logged Out', description: 'You have been successfully logged out.' });
+    router.push('/login');
   };
 
   const onAddNews: SubmitHandler<NewsArticle> = async (data) => {
@@ -104,7 +93,6 @@ export default function AdminPage() {
     alert("Admin verified. Ready to implement daily newspaper upload functionality.");
   };
 
-
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8 flex justify-center items-center min-h-[calc(100vh-20rem)]">
@@ -117,43 +105,11 @@ export default function AdminPage() {
   }
 
   if (!user) {
+    router.push('/login');
     return (
-      <div className="container mx-auto px-4 py-8 flex justify-center items-center min-h-[calc(100vh-20rem)]">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle>Admin Login</CardTitle>
-            <CardDescription>Enter your credentials to access the admin panel.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="admin@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
-              {error && <p className="text-sm font-medium text-destructive">{error}</p>}
-              <Button type="submit" className="w-full">Login</Button>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
+        <div className="container mx-auto px-4 py-8 flex justify-center items-center min-h-[calc(100vh-20rem)]">
+            <p>Redirecting to login...</p>
+        </div>
     );
   }
 

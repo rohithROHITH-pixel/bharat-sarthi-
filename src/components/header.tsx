@@ -4,9 +4,10 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from './ui/button';
-import { Menu, X, Moon, Sun, ChevronDown, Phone, Mail, Bell } from 'lucide-react';
+import { Menu, X, Moon, Sun, ChevronDown, Phone, Mail, Bell, LogIn } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
+import { useUser } from '@/firebase';
 
 const navLinks = [
   { href: '/', label: 'HOME' },
@@ -28,6 +29,7 @@ const moreLinks = [
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const { user } = useUser();
 
   useEffect(() => {
     if (isDarkMode) {
@@ -122,10 +124,19 @@ export default function Header() {
 
           <div className="flex items-center justify-end md:justify-start flex-1 md:flex-none">
             <div className="flex items-center space-x-2">
-              <Button onClick={handleSubscription} variant="ghost" className="hover:bg-primary hover:text-white text-xs sm:text-sm">
-                  <Bell className="h-5 w-5 mr-2" />
-                  Subscribe
-              </Button>
+              {!user ? (
+                 <Button asChild variant="ghost" className="hover:bg-primary hover:text-white text-xs sm:text-sm">
+                    <Link href="/login">
+                      <LogIn className="h-5 w-5 mr-2" />
+                      Login
+                    </Link>
+                 </Button>
+              ) : (
+                <Button onClick={handleSubscription} variant="ghost" className="hover:bg-primary hover:text-white text-xs sm:text-sm">
+                    <Bell className="h-5 w-5 mr-2" />
+                    Subscribe
+                </Button>
+              )}
               <button onClick={toggleDarkMode} className="p-2 rounded-full hover:bg-gray-700">
                   {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
               </button>
