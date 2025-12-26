@@ -1,9 +1,29 @@
-
 import { getFirestore, doc, getDoc, Timestamp } from 'firebase/firestore';
 import { firebase } from '@/firebase/config';
 import { notFound } from 'next/navigation';
 import { NewsArticle } from '@/lib/news-data';
 import NewsArticleClient from '@/components/news-article-client';
+
+// Helper function to convert any Timestamps to serializable strings
+const convertTimestamps = (data: any): any => {
+    if (!data) return data;
+    if (data instanceof Timestamp) {
+        return data.toDate().toISOString();
+    }
+    if (Array.isArray(data)) {
+        return data.map(convertTimestamps);
+    }
+    if (typeof data === 'object') {
+        const newData: { [key: string]: any } = {};
+        for (const key in data) {
+            if (Object.prototype.hasOwnProperty.call(data, key)) {
+                newData[key] = convertTimestamps(data[key]);
+            }
+        }
+        return newData;
+    }
+    return data;
+};
 
 // This is a server component for fetching data
 export default async function NewsArticlePage({ params }: { params: { id: string } }) {
@@ -21,11 +41,8 @@ export default async function NewsArticlePage({ params }: { params: { id: string
 
     if (docSnap.exists()) {
       const data = docSnap.data();
-      // Ensure createdAt is a serializable string
-      if (data.createdAt && data.createdAt instanceof Timestamp) {
-        // Just use the article time, no need to serialize timestamp
-      }
-      articleData = { id: docSnap.id, ...data } as NewsArticle;
+      // Ensure data is serializable before passing to client component
+      articleData = convertTimestamps({ id: docSnap.id, ...data }) as NewsArticle;
     } else {
         notFound();
     }

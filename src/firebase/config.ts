@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { initializeApp, getApp, getApps } from "firebase/app";
+import { initializeApp, getApp, getApps, FirebaseApp } from "firebase/app";
 
 const firebaseConfig = {
   "projectId": "studio-424035060-99d99",
@@ -12,11 +12,11 @@ const firebaseConfig = {
 
 // Initialize Firebase App
 // This function avoids re-initializing the app on both server and client.
-function initializeFirebaseApp() {
-  if (getApps().length) {
-    return getApp();
-  }
-  return initializeApp(firebaseConfig);
+let firebaseApp: FirebaseApp;
+if (getApps().length) {
+    firebaseApp = getApp();
+} else {
+    firebaseApp = initializeApp(firebaseConfig);
 }
 
-export const firebase = initializeFirebaseApp();
+export const firebase = firebaseApp;
