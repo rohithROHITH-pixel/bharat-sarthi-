@@ -26,7 +26,7 @@ export default function NewsList({ newsItems, onDelete, onEdit, isAdmin = false 
     }
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {newsItems.map((item) => {
                 return (
                     <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-shadow flex flex-col group">
@@ -90,3 +90,5 @@ export default function NewsList({ newsItems, onDelete, onEdit, isAdmin = false 
         </div>
     );
 }
+
+    
