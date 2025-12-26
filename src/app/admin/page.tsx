@@ -30,7 +30,7 @@ import { Textarea } from '@/components/ui/textarea';
 // 1. Go to your Firebase project -> Authentication -> Users tab.
 // 2. Copy the UID for your admin user account.
 // 3. Paste the UID here to grant admin privileges.
-const ADMIN_USER_ID = "REPLACE_WITH_YOUR_ADMIN_UID";
+const ADMIN_USER_ID = "LDvQPgjj26PAoWzyBHm6aNe3vsv2";
 
 export default function AdminPage() {
   const { user, loading } = useUser();
