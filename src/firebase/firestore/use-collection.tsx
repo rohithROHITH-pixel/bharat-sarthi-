@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import {
   collection,
   onSnapshot,
@@ -25,17 +25,26 @@ export function useCollection<T>(
 
   const queryRef = useRef(query);
   queryRef.current = query;
+  
+  const [refetchCount, setRefetchCount] = useState(0);
+
+  const refetch = useCallback(() => {
+    setRefetchCount(prev => prev + 1);
+  }, []);
 
   useEffect(() => {
     if (!queryRef.current) {
       setLoading(false);
+      setData([]); // Set to empty array instead of null
       return;
     }
+    
+    setLoading(true);
 
     const unsubscribe = onSnapshot(
       queryRef.current,
       (snapshot: QuerySnapshot<T>) => {
-        const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const items = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as T));
         setData(items);
         setLoading(false);
       },
@@ -47,7 +56,7 @@ export function useCollection<T>(
     );
 
     return () => unsubscribe();
-  }, [queryRef.current]);
+  }, [queryRef.current, refetchCount]);
 
-  return { data, loading, error };
+  return { data, loading, error, refetch };
 }

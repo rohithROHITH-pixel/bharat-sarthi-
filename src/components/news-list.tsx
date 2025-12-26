@@ -25,7 +25,7 @@ export default function NewsList({ newsItems, onDelete, isAdmin }: NewsListProps
     }
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {newsItems.map((item) => {
                 return (
                     <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-shadow flex flex-col group">
@@ -38,7 +38,7 @@ export default function NewsList({ newsItems, onDelete, isAdmin }: NewsListProps
                                         fill
                                         className="object-cover group-hover:scale-105 transition-transform duration-300"
                                         data-ai-hint={item.imageHint}
-                                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                     />
                                 </div>
                             </Link>

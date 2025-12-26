@@ -7,11 +7,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import NewsList from '@/components/news-list';
-import { PlusCircle, Upload, Trash2, FileText, Link as LinkIcon } from 'lucide-react';
+import { PlusCircle, Upload, Trash2, FileText, Link as LinkIcon, RefreshCw } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Label } from '@/components/ui/label';
 import { useCollection } from '@/firebase';
-import { collection, deleteDoc, doc, addDoc, serverTimestamp, query, orderBy } from 'firebase/firestore';
+import { collection, deleteDoc, doc, addDoc, serverTimestamp, query, orderBy, writeBatch } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { NewsArticle, newsSchema } from '@/lib/news-data';
 import {
@@ -29,6 +29,8 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Textarea } from '@/components/ui/textarea';
 import { useRouter } from 'next/navigation';
+import { sampleNewsData } from '@/lib/sample-data';
+
 
 const ADMIN_USER_EMAIL = "roopanrohith320@gmail.com";
 
@@ -41,7 +43,7 @@ export default function AdminPage() {
 
   const isAdmin = user?.email === ADMIN_USER_EMAIL;
 
-  const { data: newsItems, loading: newsLoading, error: newsError } = useCollection<NewsArticle>(
+  const { data: newsItems, loading: newsLoading, error: newsError, refetch } = useCollection<NewsArticle>(
     firestore ? query(collection(firestore, 'news'), orderBy('createdAt', 'desc')) : null
   );
 
@@ -69,6 +71,27 @@ export default function AdminPage() {
       router.push('/login');
     }
   }, [user, loading, router]);
+  
+  const handleSeedData = async () => {
+    if (!firestore || !user) return;
+    try {
+      const batch = writeBatch(firestore);
+      sampleNewsData.forEach(article => {
+        const docRef = doc(collection(firestore, 'news'));
+        batch.set(docRef, {
+          ...article,
+          creatorId: user.uid,
+          createdAt: serverTimestamp(),
+        });
+      });
+      await batch.commit();
+      toast({ title: 'Sample Data Added', description: 'Karnataka-focused news has been added.'});
+      refetch(); // Refetch the news items
+    } catch(e) {
+      console.error(e);
+      toast({ variant: 'destructive', title: 'Error', description: 'Could not add sample data.' });
+    }
+  }
 
 
   const handleLogout = async () => {
@@ -186,6 +209,10 @@ export default function AdminPage() {
                 <h2 className="text-2xl font-bold text-center sm:text-left w-full sm:w-auto">Manage News Articles</h2>
                 <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                     {isAdmin && (
+                        <>
+                        <Button onClick={handleSeedData} variant="outline">
+                           <RefreshCw className="mr-2 h-4 w-4" /> Seed Karnataka News
+                        </Button>
                         <Dialog open={isAddNewsOpen} onOpenChange={setAddNewsOpen}>
                             <DialogTrigger asChild>
                                 <Button className="w-full sm:w-auto">
@@ -242,6 +269,7 @@ export default function AdminPage() {
                                 </form>
                             </DialogContent>
                         </Dialog>
+                        </>
                     )}
                 </div>
             </div>

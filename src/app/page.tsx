@@ -39,7 +39,11 @@ export default function Home() {
     <div className="space-y-8 pb-8">
       <HeroSection article={featuredNews} />
       <div className="container mx-auto px-4">
-        <NewsList newsItems={otherNews || []} />
+        {otherNews && otherNews.length > 0 ? (
+          <NewsList newsItems={otherNews} />
+        ) : (
+          !loading && <p className='text-center text-muted-foreground'>No additional news articles found.</p>
+        )}
       </div>
     </div>
   );
