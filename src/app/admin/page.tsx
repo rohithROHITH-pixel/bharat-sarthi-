@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import NewsList from '@/components/news-list';
-import { PlusCircle, Upload, Trash2, FileText, Link as LinkIcon, RefreshCw, ShieldAlert } from 'lucide-react';
+import { PlusCircle, Upload, Trash2, FileText, Link as LinkIcon, RefreshCw, ShieldAlert, Pencil } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Label } from '@/components/ui/label';
 import { useCollection } from '@/firebase';
@@ -33,6 +33,8 @@ import { sampleNewsData } from '@/lib/sample-data';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 
+type Newspaper = { id: string; title: string; url: string; };
+
 export default function AdminPage() {
   const { user, claims, loading } = useUser();
   const auth = useAuth();
@@ -54,7 +56,7 @@ export default function AdminPage() {
 
   const { data: newsItems, loading: newsLoading, error: newsError, refetch } = useCollection<NewsArticle>(newsQuery);
 
-  const { data: newspapers, loading: newspapersLoading, error: newspapersError } = useCollection<{id: string, title: string, url: string}>(newspapersQuery);
+  const { data: newspapers, loading: newspapersLoading, error: newspapersError } = useCollection<Newspaper>(newspapersQuery);
 
   const addForm = useForm<NewsArticle>({
     resolver: zodResolver(newsSchema),
@@ -67,10 +69,15 @@ export default function AdminPage() {
   const [isAddNewsOpen, setAddNewsOpen] = useState(false);
   const [isEditNewsOpen, setEditNewsOpen] = useState(false);
   const [editingArticle, setEditingArticle] = useState<NewsArticle | null>(null);
+  
   const [isUploadPaperOpen, setUploadPaperOpen] = useState(false);
+  const [isEditPaperOpen, setEditPaperOpen] = useState(false);
+  const [editingNewspaper, setEditingNewspaper] = useState<Newspaper | null>(null);
   const [uploading, setUploading] = useState(false);
   const [paperTitle, setPaperTitle] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const editFileInputRef = useRef<HTMLInputElement>(null);
+
 
   useEffect(() => {
     if (!loading && !user) {
@@ -190,6 +197,57 @@ export default function AdminPage() {
         setUploading(false);
     }
   };
+  
+  const openEditPaperDialog = (paper: Newspaper) => {
+    setEditingNewspaper(paper);
+    setPaperTitle(paper.title);
+    setEditPaperOpen(true);
+  }
+
+  const handleUpdateDailyNews = async (event: FormEvent) => {
+    event.preventDefault();
+    if (!firestore || !editingNewspaper || !paperTitle) {
+        toast({ variant: 'destructive', title: 'Error', description: 'No newspaper selected for update.' });
+        return;
+    }
+    const newFile = editFileInputRef.current?.files?.[0];
+
+    setUploading(true);
+    const storage = getStorage();
+
+    try {
+        let newDownloadURL = editingNewspaper.url;
+
+        // If a new file is selected, upload it and delete the old one
+        if (newFile) {
+            // Delete old file
+            const oldFileRef = ref(storage, editingNewspaper.url);
+            await deleteObject(oldFileRef);
+
+            // Upload new file
+            const newStorageRef = ref(storage, `newspapers/${Date.now()}_${newFile.name}`);
+            const snapshot = await uploadBytes(newStorageRef, newFile);
+            newDownloadURL = await getDownloadURL(snapshot.ref);
+        }
+
+        // Update Firestore document
+        const docRef = doc(firestore, 'newspapers', editingNewspaper.id);
+        await updateDoc(docRef, {
+            title: paperTitle,
+            url: newDownloadURL,
+        });
+
+        toast({ title: 'Update Successful', description: 'The newspaper has been updated.' });
+        setPaperTitle('');
+        setEditingNewspaper(null);
+        setEditPaperOpen(false);
+    } catch (error) {
+        console.error("Error updating newspaper: ", error);
+        toast({ variant: 'destructive', title: 'Update Failed', description: 'There was an error updating the newspaper.' });
+    } finally {
+        setUploading(false);
+    }
+  };
 
   const handleDeleteNewspaper = async (id: string, url: string) => {
     if (!firestore) return;
@@ -211,9 +269,9 @@ export default function AdminPage() {
 
   if (loading || !claims.loaded || !user) {
     return (
-      <div className="container mx-auto px-4 py-8 flex justify-center items-center min-h-[calc(100vh-20rem)]">
+      <div className="container mx-auto flex min-h-[calc(100vh-20rem)] items-center justify-center px-4 py-8">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-dashed rounded-full animate-spin border-primary mx-auto"></div>
+          <div className="mx-auto h-16 w-16 animate-spin rounded-full border-4 border-dashed border-primary"></div>
           <p className="mt-4 text-muted-foreground">Loading Admin Panel...</p>
         </div>
       </div>
@@ -222,7 +280,7 @@ export default function AdminPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+      <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <div className='text-center sm:text-left'>
           <h1 className="text-3xl font-bold">Content Dashboard</h1>
            <p className="text-muted-foreground">
@@ -235,7 +293,7 @@ export default function AdminPage() {
        {!isAdmin && (
         <Card className="mb-8 border-yellow-500 bg-yellow-50/50">
           <CardHeader className='flex-row items-center gap-4 space-y-0'>
-            <ShieldAlert className='w-8 h-8 text-yellow-600' />
+            <ShieldAlert className='h-8 w-8 text-yellow-600' />
             <div>
               <CardTitle className='text-lg text-yellow-800'>Reader Mode</CardTitle>
               <CardDescription className='text-yellow-700'>You are viewing this page as a reader. You do not have permissions to add, edit, or delete content.</CardDescription>
@@ -247,9 +305,9 @@ export default function AdminPage() {
       <div className='space-y-12'>
         {/* News Management */}
         <div className='space-y-8'>
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <h2 className="text-2xl font-bold text-center sm:text-left w-full sm:w-auto">Manage News Articles</h2>
-                <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+            <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+                <h2 className="w-full text-center text-2xl font-bold sm:w-auto sm:text-left">Manage News Articles</h2>
+                <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
                     {isAdmin && (
                         <>
                         <Button onClick={handleSeedData} variant="outline" className="w-full sm:w-auto">
@@ -261,11 +319,11 @@ export default function AdminPage() {
                                     <PlusCircle className="mr-2 h-4 w-4" /> Add News
                                 </Button>
                             </DialogTrigger>
-                            <DialogContent className="sm:max-w-xl max-h-[90vh] flex flex-col">
+                            <DialogContent className="flex max-h-[90vh] flex-col sm:max-w-2xl">
                                 <DialogHeader>
                                     <DialogTitle>Add New Article</DialogTitle>
                                 </DialogHeader>
-                                <ScrollArea className="flex-grow pr-6 -mr-6">
+                                <ScrollArea className="-mr-6 flex-grow pr-6">
                                     <form onSubmit={addForm.handleSubmit(onAddNews)} id="add-news-form" className="space-y-4">
                                         <div>
                                             <Label htmlFor="title">Title</Label>
@@ -315,11 +373,11 @@ export default function AdminPage() {
                         
                         {/* Edit News Dialog */}
                         <Dialog open={isEditNewsOpen} onOpenChange={setEditNewsOpen}>
-                          <DialogContent className="sm:max-w-xl max-h-[90vh] flex flex-col">
+                          <DialogContent className="flex max-h-[90vh] flex-col sm:max-w-2xl">
                             <DialogHeader>
                               <DialogTitle>Edit Article</DialogTitle>
                             </DialogHeader>
-                            <ScrollArea className="flex-grow pr-6 -mr-6">
+                            <ScrollArea className="-mr-6 flex-grow pr-6">
                               <form onSubmit={editForm.handleSubmit(onEditNews)} id="edit-news-form" className="space-y-4">
                                 <div>
                                   <Label htmlFor="edit-title">Title</Label>
@@ -377,9 +435,9 @@ export default function AdminPage() {
         
         {/* Newspaper Management */}
         <div className='space-y-8'>
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <h2 className="text-2xl font-bold text-center sm:text-left w-full sm:w-auto">Manage Daily Newspapers</h2>
-                <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+            <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+                <h2 className="w-full text-center text-2xl font-bold sm:w-auto sm:text-left">Manage Daily Newspapers</h2>
+                <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
                     {isAdmin && (
                        <Dialog open={isUploadPaperOpen} onOpenChange={setUploadPaperOpen}>
                             <DialogTrigger asChild>
@@ -391,7 +449,7 @@ export default function AdminPage() {
                                 <DialogHeader>
                                     <DialogTitle>Upload Newspaper PDF</DialogTitle>
                                 </DialogHeader>
-                                <form onSubmit={handleUploadDailyNews} className="space-y-4">
+                                <form onSubmit={handleUploadDailyNews} id="upload-paper-form" className="space-y-4">
                                     <div>
                                         <Label htmlFor="paperTitle">Title (e.g., "E-Paper July 20, 2024")</Label>
                                         <Input
@@ -405,15 +463,15 @@ export default function AdminPage() {
                                         <Label htmlFor="paperFile">Newspaper PDF File</Label>
                                         <Input id="paperFile" type="file" accept=".pdf" ref={fileInputRef} required />
                                     </div>
-                                    <DialogFooter>
-                                        <DialogClose asChild>
-                                            <Button type="button" variant="secondary" disabled={uploading}>Cancel</Button>
-                                        </DialogClose>
-                                        <Button type="submit" disabled={uploading}>
-                                            {uploading ? 'Uploading...' : 'Upload'}
-                                        </Button>
-                                    </DialogFooter>
                                 </form>
+                                <DialogFooter>
+                                    <DialogClose asChild>
+                                        <Button type="button" variant="secondary" disabled={uploading}>Cancel</Button>
+                                    </DialogClose>
+                                    <Button type="submit" form="upload-paper-form" disabled={uploading}>
+                                        {uploading ? 'Uploading...' : 'Upload'}
+                                    </Button>
+                                </DialogFooter>
                             </DialogContent>
                         </Dialog>
                     )}
@@ -422,57 +480,93 @@ export default function AdminPage() {
             {newspapersLoading && <p>Loading newspapers...</p>}
             {newspapersError && <p className="text-destructive">Error loading newspapers: {newspapersError.message}</p>}
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {newspapers?.map(paper => (
                     <Card key={paper.id} className='flex flex-col'>
                         <CardHeader className='flex-grow'>
                             <div className='flex items-start gap-4'>
-                                <FileText className='w-8 h-8 text-primary mt-1' />
+                                <FileText className='mt-1 h-8 w-8 text-primary' />
                                 <div>
                                     <CardTitle className='text-base'>{paper.title}</CardTitle>
                                     <CardDescription>
-                                        <a href={paper.url} target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline flex items-center gap-1">
-                                            <LinkIcon className='w-3 h-3' /> View PDF
+                                        <a href={paper.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-primary hover:underline">
+                                            <LinkIcon className='h-3 w-3' /> View PDF
                                         </a>
                                     </CardDescription>
                                 </div>
                             </div>
                         </CardHeader>
                         {isAdmin && (
-                            <CardContent className="p-2 border-t mt-auto">
-                                <AlertDialog>
-                                    <AlertDialogTrigger asChild>
-                                        <Button variant="destructive" size="sm" className='w-full'>
-                                            <Trash2 className="mr-2 h-4 w-4" /> Delete
-                                        </Button>
-                                    </AlertDialogTrigger>
-                                    <AlertDialogContent>
-                                        <AlertDialogHeader>
-                                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                                            <AlertDialogDescription>
-                                                This will permanently delete the newspaper {paper.title}.
-                                            </AlertDialogDescription>
-                                        </AlertDialogHeader>
-                                        <AlertDialogFooter>
-                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                            <AlertDialogAction onClick={() => handleDeleteNewspaper(paper.id, paper.url)}>
-                                                Continue
-                                            </AlertDialogAction>
-                                        </AlertDialogFooter>
-                                    </AlertDialogContent>
-                                </AlertDialog>
+                            <CardContent className="mt-auto border-t p-2">
+                                <div className="flex justify-end gap-2">
+                                    <Button variant="outline" size="sm" onClick={() => openEditPaperDialog(paper)}>
+                                        <Pencil className="mr-2 h-4 w-4" /> Update
+                                    </Button>
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild>
+                                            <Button variant="destructive" size="sm">
+                                                <Trash2 className="mr-2 h-4 w-4" /> Delete
+                                            </Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                    This will permanently delete the newspaper {paper.title}.
+                                                </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                <AlertDialogAction onClick={() => handleDeleteNewspaper(paper.id, paper.url)}>
+                                                    Continue
+                                                </AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
+                                </div>
                             </CardContent>
                         )}
                     </Card>
                 ))}
             </div>
              {newspapers?.length === 0 && !newspapersLoading && (
-                <p className='text-muted-foreground text-center col-span-full'>No newspapers have been uploaded yet.</p>
+                <p className='col-span-full text-center text-muted-foreground'>No newspapers have been uploaded yet.</p>
             )}
         </div>
       </div>
+      
+      {/* Edit Newspaper Dialog */}
+      <Dialog open={isEditPaperOpen} onOpenChange={setEditPaperOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+                <DialogTitle>Update Newspaper</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleUpdateDailyNews} id="edit-paper-form" className="space-y-4">
+                <div>
+                    <Label htmlFor="editPaperTitle">Title</Label>
+                    <Input
+                        id="editPaperTitle"
+                        value={paperTitle}
+                        onChange={(e) => setPaperTitle(e.target.value)}
+                        required
+                    />
+                </div>
+                <div>
+                    <Label htmlFor="editPaperFile">Newspaper PDF File (Optional)</Label>
+                    <Input id="editPaperFile" type="file" accept=".pdf" ref={editFileInputRef} />
+                    <p className='text-xs text-muted-foreground mt-1'>Only select a file if you want to replace the existing one.</p>
+                </div>
+            </form>
+            <DialogFooter>
+                <DialogClose asChild>
+                    <Button type="button" variant="secondary" disabled={uploading}>Cancel</Button>
+                </DialogClose>
+                <Button type="submit" form="edit-paper-form" disabled={uploading}>
+                    {uploading ? 'Updating...' : 'Update'}
+                </Button>
+            </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
-
-    
