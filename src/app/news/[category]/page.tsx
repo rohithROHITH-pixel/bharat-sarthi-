@@ -1,67 +1,67 @@
-'use client';
+'use server';
 
-import { useParams } from 'next/navigation';
 import NewsList from '@/components/news-list';
-import { useCollection, useFirestore } from '@/firebase';
-import { collection, query, where, orderBy } from 'firebase/firestore';
+import { getFirestore, collection, query, where, orderBy, getDocs, Timestamp } from 'firebase/firestore';
+import { firebase } from '@/firebase/config';
 import { NewsArticle } from '@/lib/news-data';
-import { useMemo } from 'react';
+import { convertTimestamps } from '@/lib/utils';
+import { notFound } from 'next/navigation';
+
 
 // Helper to capitalize first letter
-const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+const capitalize = (s: string) => {
+    if (typeof s !== 'string' || !s) return s;
+    return s.charAt(0).toUpperCase() + s.slice(1);
+}
 
-export default function CategoryNewsPage() {
-  const params = useParams();
-  const firestore = useFirestore();
-  const category = useMemo(() => {
-    if (typeof params.category !== 'string') return null;
-    // The URLs are lowercase, but categories in the DB might be capitalized.
-    // We'll search for the capitalized version.
-    // e.g. /news/sports -> "Sports"
-    return capitalize(params.category);
-  }, [params.category]);
+async function getNewsForCategory(categoryParam: string | string[]) {
+    const category = Array.isArray(categoryParam) ? categoryParam[0] : categoryParam;
+    if (typeof category !== 'string') {
+        return [];
+    }
+    
+    const capitalizedCategory = capitalize(decodeURIComponent(category));
 
-  const newsQuery = useMemo(() => {
-    if (!firestore || !category) return null;
-    return query(
-        collection(firestore, 'news'), 
-        where('category', '==', category),
+    const firestore = getFirestore(firebase);
+    const newsQuery = query(
+        collection(firestore, 'news'),
+        where('category', '==', capitalizedCategory),
         orderBy('createdAt', 'desc')
     );
-  }, [firestore, category]);
+    const snapshot = await getDocs(newsQuery);
 
-  const { data: newsItems, loading, error } = useCollection<NewsArticle>(newsQuery);
+    if (snapshot.empty) {
+        return [];
+    }
 
-  if (loading) {
-    return (
-      <div className="container mx-auto px-4 py-8 flex justify-center items-center min-h-[calc(100vh-20rem)]">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-dashed rounded-full animate-spin border-primary mx-auto"></div>
-          <p className="mt-4 text-muted-foreground">Loading {category} News...</p>
-        </div>
-      </div>
-    );
+    const newsItems = snapshot.docs.map(doc => {
+        const data = doc.data();
+        const serializableData = convertTimestamps(data);
+        return { id: doc.id, ...serializableData } as NewsArticle;
+    });
+
+    return newsItems;
+}
+
+export default async function CategoryNewsPage({ params }: { params: { category: string } }) {
+  if (!params.category) {
+      notFound();
   }
 
-  if (error) {
-    return (
-      <div className="container mx-auto px-4 py-8 text-center">
-        <p className="text-destructive">Error loading news articles. Please try again later.</p>
-      </div>
-    );
-  }
-  
+  const newsItems = await getNewsForCategory(params.category);
+  const categoryName = capitalize(decodeURIComponent(params.category));
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold font-headline mb-8 border-b pb-4 text-primary">
-        {category}
+        {categoryName}
       </h1>
       {newsItems && newsItems.length > 0 ? (
           <NewsList newsItems={newsItems} />
       ) : (
-         <div className="text-center">
+         <div className="text-center py-10">
              <h2 className="text-2xl font-bold mb-4">No News Found</h2>
-             <p className="text-muted-foreground">There are no articles in the "{category}" category at the moment.</p>
+             <p className="text-muted-foreground">There are no articles in the "{categoryName}" category at the moment.</p>
         </div>
       )}
     </div>
