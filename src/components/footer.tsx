@@ -95,7 +95,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-8 border-t border-gray-800 pt-6 text-center text-xs text-gray-500">
-          <p>&copy; {new Date().getFullYear()} Bharatha Sarathi. Powered by FILMY SCOOP.</p>
+          <p>&copy; {new Date().getFullYear()} Bharatha Sarathi. Powered by FILMY SCOOP. | <Link href="/admin" className="hover:text-primary">Admin</Link></p>
         </div>
       </div>
     </footer>
