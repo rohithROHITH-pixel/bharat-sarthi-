@@ -10,6 +10,7 @@ import NewsList from '@/components/news-list';
 import { PlusCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Label } from '@/components/ui/label';
+import { newsItems } from '@/lib/news-data';
 
 export default function AdminPage() {
   const { user, loading } = useAuth();
