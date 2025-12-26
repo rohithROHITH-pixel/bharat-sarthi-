@@ -28,6 +28,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Textarea } from '@/components/ui/textarea';
 
 const ADMIN_USER_ID = "LDvQPgjj26PAoWzyBHm6aNe3vsv2";
+const ADMIN_USER_EMAIL = "REPLACE_WITH_YOUR_ADMIN_EMAIL"; // <-- Add your admin email here
 
 export default function AdminPage() {
   const { user, loading } = useUser();
@@ -38,7 +39,7 @@ export default function AdminPage() {
   const { toast } = useToast();
   const firestore = useFirestore();
 
-  const isAdmin = user?.uid === ADMIN_USER_ID;
+  const isAdmin = user?.uid === ADMIN_USER_ID && user?.email === ADMIN_USER_EMAIL;
 
   const { data: newsItems, loading: newsLoading, error: newsError } = useCollection<NewsArticle>(
     firestore ? query(collection(firestore, 'news'), orderBy('createdAt', 'desc')) : null
