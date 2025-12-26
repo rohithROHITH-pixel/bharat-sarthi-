@@ -12,7 +12,8 @@ export default function Home() {
 
   const newsQuery = useMemo(() => {
     if (!firestore) return null;
-    return query(collection(firestore, 'news'), orderBy('createdAt', 'desc'), limit(10));
+    // Fetch 5 articles: 1 for hero, 4 for the grid below.
+    return query(collection(firestore, 'news'), orderBy('createdAt', 'desc'), limit(5));
   }, [firestore]);
 
   const { data: newsItems, loading, error } = useCollection<NewsArticle>(newsQuery);
@@ -44,7 +45,12 @@ export default function Home() {
       <HeroSection article={featuredNews} />
       <div className="container mx-auto px-4">
         {otherNews && otherNews.length > 0 ? (
-          <NewsList newsItems={otherNews} />
+          <>
+            <h2 className="text-3xl font-bold font-headline mb-8 border-b-4 border-primary pb-2">
+                Latest News
+            </h2>
+            <NewsList newsItems={otherNews} />
+          </>
         ) : (
           !loading && <p className='text-center text-muted-foreground'>No additional news articles found.</p>
         )}
