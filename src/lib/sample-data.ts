@@ -2,84 +2,48 @@ import { NewsArticle } from "./news-data";
 
 export const sampleNewsData: Omit<NewsArticle, 'id' | 'creatorId' | 'createdAt'>[] = [
   {
-    title: "Bengaluru Tech Summit 2024 to Focus on AI and Global Innovation",
+    title: "Karnataka Govt Launches AI-Powered Platform to Modernize Agriculture",
     category: "ರಾಜ್ಯ ಸುದ್ದಿ",
-    imageUrl: "https://picsum.photos/seed/bengaluru-tech/800/600",
-    imageHint: "tech summit",
-    summary: "The upcoming Bengaluru Tech Summit will bring together global leaders to discuss the future of AI, biotechnology, and sustainable technology, reinforcing Karnataka's position as India's innovation hub.",
-    content: "The government of Karnataka announced that the Bengaluru Tech Summit 2024 will be held in November. This year's theme, 'Code the Future,' will explore advancements in artificial intelligence, machine learning, and their impact on various sectors. The summit aims to attract investment and foster collaboration between international companies and local startups, further solidifying Bengaluru's reputation as the Silicon Valley of India. Keynote speakers from major tech giants are expected to attend.",
-    time: "45 minutes ago"
-  },
-  {
-    title: "Mysuru Dasara Preparations Begin, Elephant Procession Route Finalized",
-    category: "ಸಂಸ್ಕೃತಿ",
-    imageUrl: "https://picsum.photos/seed/mysuru-dasara/800/600",
-    imageHint: "elephant festival",
-    summary: "Authorities in Mysuru have finalized the route for the iconic 'Jamboo Savari' elephant procession, marking the official start of preparations for the world-renowned Dasara festival.",
-    content: "With the grand Mysuru Dasara festival just a few months away, the district administration has begun preparations. The traditional path for the majestic elephant procession, the main attraction of the festival, has been inspected and approved. This year, the festivities are expected to be grander than ever, attracting tourists from across the globe to witness the cultural heritage of Karnataka. The selection of elephants for the procession is also underway.",
+    imageUrl: "https://picsum.photos/seed/ai-agriculture/800/600",
+    imageHint: "AI agriculture technology",
+    summary: "The state government has launched a new AI platform, 'Krishi Mitra AI', to provide real-time data on crop health, soil conditions, and weather to farmers, aiming to boost productivity.",
+    content: "In a landmark move, the Karnataka government unveiled 'Krishi Mitra AI,' a new digital platform designed to empower farmers with cutting-edge technology. The platform uses satellite imagery and machine learning algorithms to analyze farm data and provide actionable insights directly to farmers' smartphones. This initiative is expected to help farmers make informed decisions about irrigation, pesticide use, and harvest times, leading to better yields and reduced costs. The project will be rolled out in a phased manner, starting with Kolar and Mandya districts.",
     time: "2 hours ago"
   },
   {
-    title: "New Metro Line to Connect Silk Board to Kempegowda International Airport",
+    title: "Bengaluru to Host Global AI Conclave Focusing on Ethical Innovation",
+    category: "ವಿಜ್ಞಾನ",
+    imageUrl: "https://picsum.photos/seed/ai-conclave/800/600",
+    imageHint: "AI conference",
+    summary: "Bengaluru is set to host the world's leading AI researchers and ethicists to discuss the future of responsible AI development and its societal impact.",
+    content: "The Global AI Conclave, scheduled for next month in Bengaluru, will address the critical need for ethical guidelines in artificial intelligence. The event will feature panel discussions on data privacy, algorithmic bias, and the future of work in an AI-driven world. Organizers hope to establish a framework for responsible innovation that can be adopted globally, reinforcing Bengaluru's status as a hub for conscientious technology leadership.",
+    time: "10 hours ago"
+  },
+  {
+    title: "New 'AI City' Planned on the Outskirts of Bengaluru to Foster Innovation",
     category: "ರಾಜ್ಯ ಸುದ್ದಿ",
-    imageUrl: "https://picsum.photos/seed/bengaluru-metro/800/600",
-    imageHint: "metro train",
-    summary: "The Bangalore Metro Rail Corporation Ltd (BMRCL) has fast-tracked the construction of the new Blue Line, which will significantly reduce travel time between the city's tech corridor and the airport.",
-    content: "Commuters in Bengaluru can look forward to easier airport travel as the BMRCL accelerates work on the ORR-Airport Metro line. This crucial infrastructure project will connect the Central Silk Board junction with the Kempegowda International Airport. Spanning over 58 kilometers, the line is expected to be operational by 2026 and will feature 30 stations, integrating the tech hubs of the Outer Ring Road with the airport, thereby easing traffic congestion significantly.",
-    time: "5 hours ago"
-  },
-  {
-    title: "Karnataka Government Announces Farm Loan Waiver to Support Farmers",
-    category: "ರಾಜಕೀಯ",
-    imageUrl: "https://picsum.photos/seed/karnataka-farmer/800/600",
-    imageHint: "farmer field",
-    summary: "In a major relief to the agricultural community, the Karnataka state government has announced a comprehensive farm loan waiver scheme for small and marginal farmers.",
-    content: "Facing distress due to erratic monsoons, the Karnataka government has rolled out a loan waiver for farmers holding loans up to ₹1 lakh. The move is intended to provide immediate relief and prevent farmers from falling into a debt trap. The chief minister stated that the welfare of the 'annadata' (food provider) is the government's top priority and this step will help revive the rural economy. Opposition parties have welcomed the move but have also called for long-term solutions.",
-    time: "8 hours ago"
-  },
-  {
-    title: "Hampi's Ancient Ruins Attract Record Number of Tourists Post-Pandemic",
-    category: "ಪ್ರವಾಸೋದ್ಯಮ",
-    imageUrl: "https://picsum.photos/seed/hampi-ruins/800/600",
-    imageHint: "ancient ruins",
-    summary: "The UNESCO World Heritage site of Hampi is witnessing a massive influx of domestic and international tourists, signaling a strong recovery for Karnataka's tourism sector.",
-    content: "The ancient city of Hampi, once the capital of the Vijayanagara Empire, is bustling with activity again. Tourism officials report that footfall has surpassed pre-pandemic levels, with visitors eager to explore the magnificent ruins, temples, and boulder-strewn landscapes. The state tourism department has introduced new guided tours and improved facilities to enhance the visitor experience, promoting Hampi as a must-visit destination for history and culture enthusiasts.",
+    imageUrl: "https://picsum.photos/seed/ai-city/800/600",
+    imageHint: "futuristic city skyline",
+    summary: "The Karnataka government has announced an ambitious project to build a dedicated 'AI City' to attract global talent and investment in the artificial intelligence sector.",
+    content: "Following the success of Electronic City, the state government is planning a new thematic technology park focused solely on artificial intelligence. The proposed 'AI City' will feature state-of-the-art research labs, data centers, and a startup incubator. The goal is to create a comprehensive ecosystem that supports the entire AI lifecycle, from academic research to commercial product development, and to position Karnataka as a global AI powerhouse.",
     time: "1 day ago"
   },
   {
-    title: "Chitradurga Fort Gets a New Light and Sound Show",
-    category: "ಪ್ರವಾಸೋದ್ಯಮ",
-    imageUrl: "https://picsum.photos/seed/chitradurga-fort/800/600",
-    imageHint: "fort night",
-    summary: "A new state-of-the-art light and sound show has been inaugurated at the historic Chitradurga Fort, narrating the heroic tales of Onake Obavva and the Nayaka rulers.",
-    content: "To boost tourism and highlight the rich history of the region, the Karnataka tourism department has launched a new light and sound show at Chitradurga Fort. Using advanced laser technology and immersive storytelling, the show brings to life the fort's legendary past, including the story of the brave Onake Obavva who defended the fort from Hyder Ali's army. The show is expected to be a major attraction for visitors to the region.",
+    title: "Karnataka's Startups Lead the Charge in AI-Powered Healthcare Solutions",
+    category: "ಆರೋಗ್ಯ",
+    imageUrl: "https://picsum.photos/seed/ai-healthcare/800/600",
+    imageHint: "AI medical scan",
+    summary: "Bengaluru-based startups are making waves with innovative AI tools that assist in diagnosing diseases earlier and personalizing patient treatment plans.",
+    content: "From using machine learning to detect cancer in medical scans to developing AI algorithms that predict patient risk for chronic diseases, Karnataka's health-tech startups are at the forefront of medical innovation. These new technologies are helping doctors make faster, more accurate diagnoses and are making healthcare more accessible and affordable for people across the state. Several of these startups have received international recognition and funding.",
     time: "2 days ago"
   },
-   {
-    title: "ISRO Prepares for Next Major Launch from Sriharikota",
-    category: "ವಿಜ್ಞಾನ",
-    imageUrl: "https://picsum.photos/seed/isro-rocket/800/600",
-    imageHint: "rocket launch",
-    summary: "The Indian Space Research Organisation (ISRO) is gearing up for its next big mission, a commercial satellite launch that will carry payloads from several international clients.",
-    content: "ISRO continues to be a leader in the commercial satellite launch market. The upcoming PSLV mission from the Satish Dhawan Space Centre in Sriharikota will deploy communication satellites for clients from Europe and Southeast Asia. This mission underscores ISRO's capability to provide reliable and cost-effective launch services, contributing significantly to India's space economy. The launch is scheduled for next month and preparations are in full swing.",
-    time: "3 hours ago"
-  },
   {
-    title: "Record Mango Harvest in Kolar District Brings Cheer to Farmers",
-    category: "ಕೃಷಿ",
-    imageUrl: "https://picsum.photos/seed/mango-harvest/800/600",
-    imageHint: "mango orchard",
-    summary: "Farmers in the Kolar district, known as the 'mango city' of Karnataka, are celebrating a bumper crop this year, with exports expected to reach an all-time high.",
-    content: "Favorable weather conditions have resulted in a record-breaking mango harvest in the Kolar and Chikkaballapur regions. Varieties like Alphonso, Badami, and Mallika are in high demand in both domestic and international markets. The state horticulture department has facilitated export logistics, ensuring that the 'king of fruits' from Karnataka reaches consumers worldwide. The abundant harvest has brought significant economic relief to the farming community in the region.",
-    time: "12 hours ago"
-  },
-  {
-    title: "Royal Challengers Bengaluru Announce New Captain for Upcoming IPL Season",
-    category: "ಕ್ರೀಡೆ",
-    imageUrl: "https://picsum.photos/seed/rcb-cricket/800/600",
-    imageHint: "cricket stadium",
-    summary: "In a much-anticipated announcement, Royal Challengers Bengaluru (RCB) have named their new captain ahead of the Indian Premier League (IPL) auction.",
-    content: "The RCB management has appointed a new skipper to lead the team in the upcoming IPL season. The decision comes after much speculation among fans and cricket analysts. The franchise expressed confidence that the new captain will bring fresh energy and strategy to the team in their quest for a maiden IPL trophy. The announcement has created a buzz on social media, with fans eagerly awaiting the team's performance under the new leadership.",
-    time: "1 day ago"
+    title: "AI Skilling Programs Launched to Prepare Karnataka's Workforce for Future Jobs",
+    category: "ರಾಜಕೀಯ",
+    imageUrl: "https://picsum.photos/seed/ai-education/800/600",
+    imageHint: "students learning code",
+    summary: "The state is launching a massive upskilling initiative to train one million people in AI and data science skills over the next two years to meet growing industry demand.",
+    content: "To address the skills gap in the rapidly evolving technology landscape, the Karnataka Digital Economy Mission (KDEM) has partnered with leading tech companies and educational institutions. The 'AI for All' program will offer a range of courses, from basic AI literacy to advanced machine learning engineering. The initiative aims to ensure that Karnataka's talent pool remains competitive and is well-equipped for the jobs of the future.",
+    time: "3 days ago"
   }
 ];
