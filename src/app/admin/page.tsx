@@ -23,7 +23,7 @@ import {
   DialogFooter,
   DialogClose,
 } from '@/components/ui/dialog';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/componentsui/alert-dialog';
 
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -252,7 +252,7 @@ export default function AdminPage() {
                 <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                     {isAdmin && (
                         <>
-                        <Button onClick={handleSeedData} variant="outline">
+                        <Button onClick={handleSeedData} variant="outline" className="w-full sm:w-auto">
                            <RefreshCw className="mr-2 h-4 w-4" /> Seed Karnataka News
                         </Button>
                         <Dialog open={isAddNewsOpen} onOpenChange={setAddNewsOpen}>

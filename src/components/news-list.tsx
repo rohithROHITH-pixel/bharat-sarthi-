@@ -90,5 +90,3 @@ export default function NewsList({ newsItems, onDelete, onEdit, isAdmin = false 
         </div>
     );
 }
-
-    

@@ -25,7 +25,7 @@ export default function HeroSection({ article }: HeroProps) {
   }
   
   return (
-    <section id="home" className="relative w-full min-h-[60vh] md:min-h-[70vh] flex items-center justify-center text-white">
+    <section id="home" className="relative w-full min-h-[70vh] md:min-h-[70vh] flex items-center justify-center text-white">
       <div className="absolute inset-0">
         <Image 
           src={article.imageUrl}
