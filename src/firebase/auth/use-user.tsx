@@ -28,11 +28,20 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   });
 
   useEffect(() => {
+    if (!auth) {
+        setState({ user: null, loading: false, claims: { loaded: true } });
+        return;
+    };
+    
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       let claims = { loaded: true };
       if (user) {
-        const tokenResult = await user.getIdTokenResult();
-        claims = { ...claims, ...tokenResult.claims };
+        try {
+            const tokenResult = await user.getIdTokenResult(true); // Force refresh
+            claims = { ...claims, ...tokenResult.claims };
+        } catch (e) {
+            console.error("Error fetching token result:", e);
+        }
       }
       setState({ user, loading: false, claims });
     });
