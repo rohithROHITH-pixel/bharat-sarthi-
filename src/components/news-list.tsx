@@ -12,11 +12,10 @@ import { useUser } from '@/firebase';
 
 type NewsListProps = {
   newsItems: NewsArticle[];
-  isAdmin?: boolean;
   onDelete?: (id: string) => void;
 };
 
-export default function NewsList({ newsItems, isAdmin = false, onDelete }: NewsListProps) {
+export default function NewsList({ newsItems, onDelete }: NewsListProps) {
     const { user } = useUser();
 
     if (!newsItems || newsItems.length === 0) {
@@ -53,7 +52,7 @@ export default function NewsList({ newsItems, isAdmin = false, onDelete }: NewsL
                                 </CardTitle>
                             </CardHeader>
                         </div>
-                        {isAdmin && isOwner && (
+                        {isOwner && onDelete && (
                             <CardFooter className="border-t p-2 bg-secondary/50">
                                 <div className="flex w-full justify-end gap-2">
                                     <Button variant="outline" size="sm">

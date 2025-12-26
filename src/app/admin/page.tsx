@@ -41,7 +41,7 @@ export default function AdminPage() {
   const { toast } = useToast();
   const firestore = useFirestore();
 
-  const isAdmin = user && user.uid === ADMIN_USER_ID;
+  const isAdmin = user?.uid === ADMIN_USER_ID;
 
   const { data: newsItems, loading: newsLoading, error: newsError } = useCollection<NewsArticle>(
     firestore ? query(collection(firestore, 'news'), orderBy('createdAt', 'desc')) : null
@@ -237,7 +237,7 @@ export default function AdminPage() {
         </div>
         {newsLoading && <p>Loading news...</p>}
         {newsError && <p className="text-destructive">Error loading news: {newsError.message}</p>}
-        {newsItems && <NewsList isAdmin={true} newsItems={newsItems} onDelete={handleDelete} />}
+        {newsItems && <NewsList newsItems={newsItems} onDelete={handleDelete} />}
       </div>
     </div>
   );
