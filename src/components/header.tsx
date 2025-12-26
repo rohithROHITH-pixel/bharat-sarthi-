@@ -5,6 +5,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from './ui/button';
 import { Menu, X, Moon, Sun, ChevronDown, Phone, Mail, Bell, LogIn } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
 import { useUser } from '@/firebase';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from '@/components/ui/dialog';
@@ -14,8 +20,20 @@ import { useToast } from '@/hooks/use-toast';
 
 const navLinks = [
   { href: '/', label: 'HOME' },
-  { href: '#epaper', label: 'ಇ-ಪೇಪರ್' },
+  { href: '#', label: 'ABOUT US' },
+  { href: '#', label: 'ಅಂತರಾಷ್ಟ್ರೀಯ' },
+  { href: '#', label: 'ಆರೋಗ್ಯ' },
+  { href: '#', label: 'ಕ್ರೀಡೆ' },
+  { href: '#', label: 'ಕ್ರೈಂ ಸುದ್ದಿ' },
+  { href: '#', label: 'ರಾಜಕೀಯ' },
+  { href: '#', label: 'ರಾಜ್ಯ ಸುದ್ದಿ' },
 ];
+
+const moreLinks = [
+    { href: '#', label: 'Tech' },
+    { href: '#', label: 'Business' },
+    { href: '#', label: 'Entertainment' },
+]
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -24,6 +42,7 @@ export default function Header() {
   const { toast } = useToast();
   const [isSubscribeOpen, setSubscribeOpen] = useState(false);
   const [subscriberEmail, setSubscriberEmail] = useState('');
+  const [activeLink, setActiveLink] = useState('HOME');
 
   useEffect(() => {
     if (isDarkMode) {
@@ -96,24 +115,49 @@ export default function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="px-3 py-2 text-sm font-medium uppercase hover:bg-primary hover:text-white transition-colors border-b-2 border-transparent data-[active=true]:border-primary"
-                data-active={link.href === '/'}
+                onClick={() => setActiveLink(link.label)}
+                className="px-3 py-2 text-sm font-medium uppercase hover:bg-primary hover:text-white transition-colors border-b-2"
+                data-active={activeLink === link.label}
               >
                 {link.label}
               </Link>
             ))}
+             <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="px-3 py-2 text-sm font-medium uppercase hover:bg-primary hover:text-white transition-colors flex items-center gap-1">
+                  MORE <ChevronDown className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-gray-900 text-white border-gray-700">
+                {moreLinks.map((link) => (
+                  <DropdownMenuItem key={link.href} asChild>
+                    <Link href={link.href} className="hover:bg-primary !text-white focus:bg-primary focus:text-white">
+                      {link.label}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Link
+                href="#epaper"
+                onClick={() => setActiveLink('ಇ-ಪೇಪರ್')}
+                className="px-3 py-2 text-sm font-medium uppercase hover:bg-primary hover:text-white transition-colors border-b-2"
+                data-active={activeLink === 'ಇ-ಪೇಪರ್'}
+              >
+                ಇ-ಪೇಪರ್
+              </Link>
           </nav>
 
           <div className="flex items-center justify-end md:justify-start flex-1 md:flex-none">
             <div className="flex items-center space-x-2">
-              {!user ? (
+              {!user && (
                  <Button asChild variant="ghost" className="hover:bg-primary hover:text-white text-xs sm:text-sm">
                     <Link href="/login">
                       <LogIn className="h-5 w-5 mr-2" />
                       Admin Login
                     </Link>
                  </Button>
-              ) : null}
+              )}
               <Dialog open={isSubscribeOpen} onOpenChange={setSubscribeOpen}>
                 <DialogTrigger asChild>
                     <Button variant="ghost" className="hover:bg-primary hover:text-white text-xs sm:text-sm">
@@ -178,7 +222,7 @@ export default function Header() {
                           </Button>
                       </div>
                       <nav className="flex flex-col space-y-4">
-                          {navLinks.map((link) => (
+                          {[...navLinks, { href: '#epaper', label: 'ಇ-ಪೇಪರ್' }].map((link) => (
                           <Link
                               key={link.href}
                               href={link.href}
