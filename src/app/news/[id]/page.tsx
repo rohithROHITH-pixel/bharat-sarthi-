@@ -1,5 +1,5 @@
 
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, Timestamp } from 'firebase/firestore';
 import { firebase } from '@/firebase/config';
 import { notFound } from 'next/navigation';
 import { NewsArticle } from '@/lib/news-data';
@@ -20,7 +20,12 @@ export default async function NewsArticlePage({ params }: { params: { id: string
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      articleData = { id: docSnap.id, ...docSnap.data() } as NewsArticle;
+      const data = docSnap.data();
+      // Ensure createdAt is a serializable string
+      if (data.createdAt && data.createdAt instanceof Timestamp) {
+        // Just use the article time, no need to serialize timestamp
+      }
+      articleData = { id: docSnap.id, ...data } as NewsArticle;
     } else {
         notFound();
     }
