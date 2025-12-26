@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from './ui/button';
@@ -8,6 +8,10 @@ import { Menu, X, Moon, Sun, ChevronDown, Phone, Mail, Bell, LogIn } from 'lucid
 import { Sheet, SheetContent, SheetTrigger } from './ui/sheet';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 import { useUser } from '@/firebase';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from '@/components/ui/dialog';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
+import { useToast } from '@/hooks/use-toast';
 
 const navLinks = [
   { href: '/', label: 'HOME' },
@@ -30,6 +34,9 @@ export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const { user } = useUser();
+  const { toast } = useToast();
+  const [isSubscribeOpen, setSubscribeOpen] = useState(false);
+  const [subscriberEmail, setSubscriberEmail] = useState('');
 
   useEffect(() => {
     if (isDarkMode) {
@@ -43,8 +50,15 @@ export default function Header() {
     setIsDarkMode(!isDarkMode);
   };
   
-  const handleSubscription = () => {
-    alert("Thank you for subscribing! You'll receive daily news updates.");
+  const handleSubscriptionSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    console.log(`New subscription from: ${subscriberEmail}`);
+    toast({
+        title: "Subscription Successful!",
+        description: "You'll now receive daily news updates."
+    });
+    setSubscriberEmail('');
+    setSubscribeOpen(false);
   };
 
   return (
@@ -128,15 +142,50 @@ export default function Header() {
                  <Button asChild variant="ghost" className="hover:bg-primary hover:text-white text-xs sm:text-sm">
                     <Link href="/login">
                       <LogIn className="h-5 w-5 mr-2" />
-                      Login
+                      Admin Login
                     </Link>
                  </Button>
-              ) : (
-                <Button onClick={handleSubscription} variant="ghost" className="hover:bg-primary hover:text-white text-xs sm:text-sm">
-                    <Bell className="h-5 w-5 mr-2" />
-                    Subscribe
-                </Button>
-              )}
+              ) : null}
+              <Dialog open={isSubscribeOpen} onOpenChange={setSubscribeOpen}>
+                <DialogTrigger asChild>
+                    <Button variant="ghost" className="hover:bg-primary hover:text-white text-xs sm:text-sm">
+                        <Bell className="h-5 w-5 mr-2" />
+                        Subscribe
+                    </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>Subscribe to Daily News</DialogTitle>
+                        <DialogDescription>
+                            Enter your email to receive daily news updates directly in your inbox.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <form onSubmit={handleSubscriptionSubmit}>
+                        <div className="grid gap-4 py-4">
+                            <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="email" className="text-right">
+                                    Email
+                                </Label>
+                                <Input
+                                    id="email"
+                                    type="email"
+                                    value={subscriberEmail}
+                                    onChange={(e) => setSubscriberEmail(e.target.value)}
+                                    className="col-span-3"
+                                    required
+                                    placeholder="you@example.com"
+                                />
+                            </div>
+                        </div>
+                        <DialogFooter>
+                            <DialogClose asChild>
+                                <Button type="button" variant="secondary">Cancel</Button>
+                            </DialogClose>
+                            <Button type="submit">Subscribe</Button>
+                        </DialogFooter>
+                    </form>
+                </DialogContent>
+              </Dialog>
               <button onClick={toggleDarkMode} className="p-2 rounded-full hover:bg-gray-700">
                   {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
               </button>
