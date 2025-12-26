@@ -1,49 +1,92 @@
 import { NewsArticle } from "./news-data";
 
 export const sampleNewsData: Omit<NewsArticle, 'id' | 'creatorId' | 'createdAt'>[] = [
+  // State News
   {
-    title: "Karnataka Govt Launches AI-Powered Platform to Modernize Agriculture",
+    title: "Karnataka Govt Launches 'Krishi Mitra AI' to Modernize Agriculture",
     category: "ರಾಜ್ಯ ಸುದ್ದಿ",
-    imageUrl: "https://picsum.photos/seed/ai-agriculture/800/600",
-    imageHint: "AI agriculture technology",
-    summary: "The state government has launched a new AI platform, 'Krishi Mitra AI', to provide real-time data on crop health, soil conditions, and weather to farmers, aiming to boost productivity.",
-    content: "In a landmark move, the Karnataka government unveiled 'Krishi Mitra AI,' a new digital platform designed to empower farmers with cutting-edge technology. The platform uses satellite imagery and machine learning algorithms to analyze farm data and provide actionable insights directly to farmers' smartphones. This initiative is expected to help farmers make informed decisions about irrigation, pesticide use, and harvest times, leading to better yields and reduced costs. The project will be rolled out in a phased manner, starting with Kolar and Mandya districts.",
+    imageUrl: "https://picsum.photos/seed/karnataka-agri/800/600",
+    imageHint: "farmer using tablet",
+    summary: "The state government has launched a new AI platform to provide real-time data on crop health, soil conditions, and weather to farmers, aiming to boost productivity.",
+    content: "In a landmark move, the Karnataka government unveiled 'Krishi Mitra AI,' a new digital platform designed to empower farmers with cutting-edge technology. The platform uses satellite imagery and machine learning algorithms to analyze farm data and provide actionable insights directly to farmers' smartphones.",
     time: "2 hours ago"
   },
   {
-    title: "Bengaluru to Host Global AI Conclave Focusing on Ethical Innovation",
-    category: "ವಿಜ್ಞಾನ",
-    imageUrl: "https://picsum.photos/seed/ai-conclave/800/600",
-    imageHint: "AI conference",
-    summary: "Bengaluru is set to host the world's leading AI researchers and ethicists to discuss the future of responsible AI development and its societal impact.",
-    content: "The Global AI Conclave, scheduled for next month in Bengaluru, will address the critical need for ethical guidelines in artificial intelligence. The event will feature panel discussions on data privacy, algorithmic bias, and the future of work in an AI-driven world. Organizers hope to establish a framework for responsible innovation that can be adopted globally, reinforcing Bengaluru's status as a hub for conscientious technology leadership.",
-    time: "10 hours ago"
-  },
-  {
-    title: "New 'AI City' Planned on the Outskirts of Bengaluru to Foster Innovation",
+    title: "Namma Metro's Yellow Line Set to Begin Operations in August",
     category: "ರಾಜ್ಯ ಸುದ್ದಿ",
-    imageUrl: "https://picsum.photos/seed/ai-city/800/600",
-    imageHint: "futuristic city skyline",
-    summary: "The Karnataka government has announced an ambitious project to build a dedicated 'AI City' to attract global talent and investment in the artificial intelligence sector.",
-    content: "Following the success of Electronic City, the state government is planning a new thematic technology park focused solely on artificial intelligence. The proposed 'AI City' will feature state-of-the-art research labs, data centers, and a startup incubator. The goal is to create a comprehensive ecosystem that supports the entire AI lifecycle, from academic research to commercial product development, and to position Karnataka as a global AI powerhouse.",
+    imageUrl: "https://picsum.photos/seed/namma-metro/800/600",
+    imageHint: "modern metro train",
+    summary: "BMRCL has announced that the much-awaited Yellow Line, connecting RV Road to Bommasandra, will be open to the public by the end of August 2024.",
+    content: "The Bangalore Metro Rail Corporation Ltd. (BMRCL) is in the final stages of commissioning the Yellow Line. This new line is expected to significantly ease traffic congestion in the city's tech corridor, providing a much-needed public transport option for thousands of commuters working in Electronic City.",
     time: "1 day ago"
   },
+  // Politics
   {
-    title: "Karnataka's Startups Lead the Charge in AI-Powered Healthcare Solutions",
+    title: "State Assembly Passes New Bill for Urban Development",
+    category: "ರಾಜಕೀಯ",
+    imageUrl: "https://picsum.photos/seed/vidhana-soudha/800/600",
+    imageHint: "Vidhana Soudha building",
+    summary: "A new bill aimed at streamlining urban planning and creating 'mini-cities' on the outskirts of major urban centers was passed in the legislative assembly today.",
+    content: "The Karnataka Legislative Assembly has passed the Comprehensive Urban Development Bill, which aims to decongest major cities by developing satellite towns with dedicated infrastructure. The opposition raised concerns about land acquisition and environmental impact, but the bill was passed with a majority vote.",
+    time: "8 hours ago"
+  },
+  // Sports (Cricket)
+  {
+    title: "Royal Challengers Bengaluru Announce New Captain for Upcoming Season",
+    category: "ಕ್ರೀಡೆ",
+    imageUrl: "https://picsum.photos/seed/rcb-cricket/800/600",
+    imageHint: "cricket stadium floodlights",
+    summary: "RCB management has officially named a new captain, a strategic move aimed at bringing a fresh perspective to the team's leadership for the next IPL season.",
+    content: "In a major announcement, Royal Challengers Bengaluru (RCB) have appointed a new skipper. The franchise hopes this change will bring new energy and strategy to the team as they continue their quest for the elusive IPL trophy. The decision has been met with mixed reactions from fans on social media.",
+    time: "15 hours ago"
+  },
+  // Health
+  {
+    title: "Karnataka Launches Telemedicine Hubs in 50 Rural Taluks",
     category: "ಆರೋಗ್ಯ",
-    imageUrl: "https://picsum.photos/seed/ai-healthcare/800/600",
-    imageHint: "AI medical scan",
-    summary: "Bengaluru-based startups are making waves with innovative AI tools that assist in diagnosing diseases earlier and personalizing patient treatment plans.",
-    content: "From using machine learning to detect cancer in medical scans to developing AI algorithms that predict patient risk for chronic diseases, Karnataka's health-tech startups are at the forefront of medical innovation. These new technologies are helping doctors make faster, more accurate diagnoses and are making healthcare more accessible and affordable for people across the state. Several of these startups have received international recognition and funding.",
+    imageUrl: "https://picsum.photos/seed/telemedicine-karnataka/800/600",
+    imageHint: "doctor video call",
+    summary: "The Health Department has rolled out new telemedicine centers to provide specialist medical consultations to people in remote and underserved areas of the state.",
+    content: "In an effort to bridge the urban-rural healthcare divide, the Karnataka government has established 50 telemedicine hubs. These centers will connect patients in rural areas with specialist doctors in Bengaluru and other major cities via video conferencing, providing access to quality healthcare without the need for travel.",
     time: "2 days ago"
   },
+  // Crime
   {
-    title: "AI Skilling Programs Launched to Prepare Karnataka's Workforce for Future Jobs",
-    category: "ರಾಜಕೀಯ",
-    imageUrl: "https://picsum.photos/seed/ai-education/800/600",
-    imageHint: "students learning code",
-    summary: "The state is launching a massive upskilling initiative to train one million people in AI and data science skills over the next two years to meet growing industry demand.",
-    content: "To address the skills gap in the rapidly evolving technology landscape, the Karnataka Digital Economy Mission (KDEM) has partnered with leading tech companies and educational institutions. The 'AI for All' program will offer a range of courses, from basic AI literacy to advanced machine learning engineering. The initiative aims to ensure that Karnataka's talent pool remains competitive and is well-equipped for the jobs of the future.",
+    title: "Bengaluru Police Bust Major Cybercrime Racket; 5 Arrested",
+    category: "ಕ್ರೈಂ ಸುದ್ದಿ",
+    imageUrl: "https://picsum.photos/seed/cyber-crime/800/600",
+    imageHint: "police investigation handcuffs",
+    summary: "The Central Crime Branch (CCB) of Bengaluru has successfully dismantled a sophisticated online fraud operation, arresting five individuals involved in phishing scams.",
+    content: "Acting on a tip-off, the CCB conducted a series of raids across the city, leading to the arrest of a gang that was creating fake websites to steal banking information. The police have recovered laptops, mobile phones, and several fraudulent documents from the accused.",
+    time: "20 hours ago"
+  },
+  // International
+  {
+    title: "Karnataka-based IT Firm Signs Landmark AI Deal with European Automaker",
+    category: "ಅಂತರಾಷ್ಟ್ರೀಯ",
+    imageUrl: "https://picsum.photos/seed/it-deal/800/600",
+    imageHint: "business handshake meeting",
+    summary: "A leading Bengaluru-based IT services company has secured a multi-million dollar contract to develop an AI-powered autonomous driving system for a major European car brand.",
+    content: "This deal marks a significant milestone for India's technology sector and highlights Karnataka's growing prowess in the global AI landscape. The project will involve over 500 engineers from the Bengaluru campus and will focus on developing next-generation autonomous vehicle technology.",
     time: "3 days ago"
-  }
+  },
+  // More sample news
+   {
+    title: "Mysuru Dasara Preparations Begin, Elephant Procession Route Finalized",
+    category: "ರಾಜ್ಯ ಸುದ್ದಿ",
+    imageUrl: "https://picsum.photos/seed/mysuru-dasara/800/600",
+    imageHint: "decorated elephant festival",
+    summary: "The district administration has finalized the route for the iconic 'Jumboo Savari' and has begun preparations for the world-renowned Mysuru Dasara festival.",
+    content: "With the festival just a few months away, officials have started the extensive preparations required for the grand event. The first batch of elephants will arrive in the city next month for training and acclimatization. The festival is a major tourist attraction for the state.",
+    time: "4 days ago"
+  },
+   {
+    title: "New Policy to Promote Electric Vehicle Manufacturing in Karnataka",
+    category: "ರಾಜಕೀಯ",
+    imageUrl: "https://picsum.photos/seed/ev-policy/800/600",
+    imageHint: "electric car charging",
+    summary: "The state cabinet has approved a new policy offering incentives and subsidies for companies looking to set up electric vehicle (EV) manufacturing plants in Karnataka.",
+    content: "Aiming to become a hub for electric mobility, the Karnataka government has announced a new EV policy. This includes benefits like tax exemptions and land subsidies for manufacturers, which is expected to attract significant investment and create thousands of jobs in the state.",
+    time: "5 days ago"
+  },
 ];

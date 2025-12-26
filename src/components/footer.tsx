@@ -14,13 +14,13 @@ const socialLinks = [
 ];
 
 const latestPosts = [
-    { href: '#', label: 'E paper 15 feb 2024' },
-    { href: '#', label: 'E paper 14 feb 2024' },
-    { href: '#', label: '12 feb 2024' },
+    { href: '#', label: 'E-Paper July 21, 2024' },
+    { href: '#', label: 'E-Paper July 20, 2024' },
+    { href: '#', label: 'E-Paper July 19, 2024' },
 ]
 
 export default function Footer() {
-  const [selectedDate, setSelectedDate] = useState<string>('2025-12-25');
+  const [selectedDate, setSelectedDate] = useState<string>('2024-07-21');
  
   const handleDateSearch = () => {
     // In a real application, you would navigate to a search results page
