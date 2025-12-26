@@ -1,10 +1,7 @@
 'use client';
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import {
-  collection,
   onSnapshot,
-  query,
-  where,
   Query,
   DocumentData,
   FirestoreError,
@@ -23,9 +20,6 @@ export function useCollection<T>(
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<FirestoreError | null>(null);
 
-  const queryRef = useRef(query);
-  queryRef.current = query;
-  
   const [refetchCount, setRefetchCount] = useState(0);
 
   const refetch = useCallback(() => {
@@ -33,16 +27,16 @@ export function useCollection<T>(
   }, []);
 
   useEffect(() => {
-    if (!queryRef.current) {
+    if (!query) {
       setLoading(false);
-      setData([]); // Set to empty array instead of null
+      setData([]); // Set to empty array for consistency
       return;
     }
     
     setLoading(true);
 
     const unsubscribe = onSnapshot(
-      queryRef.current,
+      query,
       (snapshot: QuerySnapshot<T>) => {
         const items = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as T));
         setData(items);
@@ -56,7 +50,8 @@ export function useCollection<T>(
     );
 
     return () => unsubscribe();
-  }, [queryRef.current, refetchCount]);
+    // The query object is now memoized in the components that use this hook.
+  }, [query, refetchCount]);
 
   return { data, loading, error, refetch };
 }

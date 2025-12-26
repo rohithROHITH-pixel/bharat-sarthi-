@@ -2,7 +2,7 @@
 
 import { useUser, useAuth, useFirestore } from '@/firebase';
 import { signOut } from 'firebase/auth';
-import { FormEvent, useState, useEffect, useRef } from 'react';
+import { FormEvent, useState, useEffect, useRef, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -43,13 +43,19 @@ export default function AdminPage() {
 
   const isAdmin = user?.email === ADMIN_USER_EMAIL;
 
-  const { data: newsItems, loading: newsLoading, error: newsError, refetch } = useCollection<NewsArticle>(
-    firestore ? query(collection(firestore, 'news'), orderBy('createdAt', 'desc')) : null
-  );
+  const newsQuery = useMemo(() => {
+      if (!firestore) return null;
+      return query(collection(firestore, 'news'), orderBy('createdAt', 'desc'));
+  }, [firestore]);
 
-  const { data: newspapers, loading: newspapersLoading, error: newspapersError } = useCollection<{id: string, title: string, url: string}>(
-    firestore ? query(collection(firestore, 'newspapers'), orderBy('createdAt', 'desc')) : null
-  );
+  const newspapersQuery = useMemo(() => {
+    if (!firestore) return null;
+    return query(collection(firestore, 'newspapers'), orderBy('createdAt', 'desc'));
+  }, [firestore]);
+
+  const { data: newsItems, loading: newsLoading, error: newsError, refetch } = useCollection<NewsArticle>(newsQuery);
+
+  const { data: newspapers, loading: newspapersLoading, error: newspapersError } = useCollection<{id: string, title: string, url: string}>(newspapersQuery);
 
   const {
     register,

@@ -2,16 +2,20 @@
 
 import HeroSection from '@/components/hero-section';
 import NewsList from '@/components/news-list';
-import { useCollection } from '@/firebase';
+import { useCollection, useFirestore } from '@/firebase';
 import { collection, query, orderBy, limit } from 'firebase/firestore';
-import { useFirestore } from '@/firebase';
 import { NewsArticle } from '@/lib/news-data';
+import { useMemo } from 'react';
 
 export default function Home() {
   const firestore = useFirestore();
-  const { data: newsItems, loading, error } = useCollection<NewsArticle>(
-    firestore ? query(collection(firestore, 'news'), orderBy('createdAt', 'desc'), limit(10)) : null
-  );
+
+  const newsQuery = useMemo(() => {
+    if (!firestore) return null;
+    return query(collection(firestore, 'news'), orderBy('createdAt', 'desc'), limit(10));
+  }, [firestore]);
+
+  const { data: newsItems, loading, error } = useCollection<NewsArticle>(newsQuery);
 
   const featuredNews = newsItems?.[0];
   const otherNews = newsItems?.slice(1);

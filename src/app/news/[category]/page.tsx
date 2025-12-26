@@ -1,9 +1,9 @@
 'use client';
 
-import { useParams, notFound } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import NewsList from '@/components/news-list';
 import { useCollection, useFirestore } from '@/firebase';
-import { collection, query, where } from 'firebase/firestore';
+import { collection, query, where, orderBy } from 'firebase/firestore';
 import { NewsArticle } from '@/lib/news-data';
 import { useMemo } from 'react';
 
@@ -23,7 +23,11 @@ export default function CategoryNewsPage() {
 
   const newsQuery = useMemo(() => {
     if (!firestore || !category) return null;
-    return query(collection(firestore, 'news'), where('category', '==', category));
+    return query(
+        collection(firestore, 'news'), 
+        where('category', '==', category),
+        orderBy('createdAt', 'desc')
+    );
   }, [firestore, category]);
 
   const { data: newsItems, loading, error } = useCollection<NewsArticle>(newsQuery);
@@ -47,22 +51,19 @@ export default function CategoryNewsPage() {
     );
   }
   
-  // This handles both invalid category slugs and categories with no articles.
-  if (!loading && (!newsItems || newsItems.length === 0)) {
-     return (
-        <div className="container mx-auto px-4 py-8 text-center">
-             <h1 className="text-3xl font-bold mb-4">No News Found</h1>
-             <p className="text-muted-foreground">There are no articles in the "{category}" category at the moment.</p>
-        </div>
-    );
-  }
-
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold font-headline mb-8 border-b pb-4 text-primary">
         {category}
       </h1>
-      <NewsList newsItems={newsItems || []} />
+      {newsItems && newsItems.length > 0 ? (
+          <NewsList newsItems={newsItems} />
+      ) : (
+         <div className="text-center">
+             <h2 className="text-2xl font-bold mb-4">No News Found</h2>
+             <p className="text-muted-foreground">There are no articles in the "{category}" category at the moment.</p>
+        </div>
+      )}
     </div>
   );
 }
