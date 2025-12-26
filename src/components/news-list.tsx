@@ -12,10 +12,11 @@ import { type NewsArticle } from '@/lib/news-data';
 type NewsListProps = {
   newsItems: NewsArticle[];
   onDelete?: (id: string) => void;
+  onEdit?: (article: NewsArticle) => void;
   isAdmin?: boolean;
 };
 
-export default function NewsList({ newsItems, onDelete, isAdmin }: NewsListProps) {
+export default function NewsList({ newsItems, onDelete, onEdit, isAdmin }: NewsListProps) {
     if (!newsItems || newsItems.length === 0) {
         return (
             <div className="col-span-full text-center py-12">
@@ -49,33 +50,37 @@ export default function NewsList({ newsItems, onDelete, isAdmin }: NewsListProps
                                 </CardTitle>
                             </CardHeader>
                         </div>
-                        {isAdmin && onDelete && (
+                        {isAdmin && (onDelete || onEdit) && (
                             <CardFooter className="border-t p-2 bg-secondary/50 mt-auto">
                                 <div className="flex w-full justify-end gap-2">
-                                    <Button variant="outline" size="sm" disabled>
-                                        <Pencil className="mr-2 h-4 w-4" /> Edit
-                                    </Button>
-                                    <AlertDialog>
-                                        <AlertDialogTrigger asChild>
-                                            <Button variant="destructive" size="sm">
-                                                <Trash2 className="mr-2 h-4 w-4" /> Delete
-                                            </Button>
-                                        </AlertDialogTrigger>
-                                        <AlertDialogContent>
-                                            <AlertDialogHeader>
-                                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                                                <AlertDialogDescription>
-                                                    This action cannot be undone. This will permanently delete the news article.
-                                                </AlertDialogDescription>
-                                            </AlertDialogHeader>
-                                            <AlertDialogFooter>
-                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                <AlertDialogAction onClick={() => onDelete?.(item.id!)}>
-                                                    Continue
-                                                </AlertDialogAction>
-                                            </AlertDialogFooter>
-                                        </AlertDialogContent>
-                                    </AlertDialog>
+                                    {onEdit && (
+                                        <Button variant="outline" size="sm" onClick={() => onEdit(item)}>
+                                            <Pencil className="mr-2 h-4 w-4" /> Edit
+                                        </Button>
+                                    )}
+                                    {onDelete && (
+                                        <AlertDialog>
+                                            <AlertDialogTrigger asChild>
+                                                <Button variant="destructive" size="sm">
+                                                    <Trash2 className="mr-2 h-4 w-4" /> Delete
+                                                </Button>
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                        This action cannot be undone. This will permanently delete the news article.
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                    <AlertDialogAction onClick={() => onDelete?.(item.id!)}>
+                                                        Continue
+                                                    </AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
+                                    )}
                                 </div>
                             </CardFooter>
                         )}

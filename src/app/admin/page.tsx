@@ -11,7 +11,7 @@ import { PlusCircle, Upload, Trash2, FileText, Link as LinkIcon, RefreshCw } fro
 import { useToast } from '@/hooks/use-toast';
 import { Label } from '@/components/ui/label';
 import { useCollection } from '@/firebase';
-import { collection, deleteDoc, doc, addDoc, serverTimestamp, query, orderBy, writeBatch } from 'firebase/firestore';
+import { collection, deleteDoc, doc, addDoc, serverTimestamp, query, orderBy, writeBatch, updateDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { NewsArticle, newsSchema } from '@/lib/news-data';
 import {
@@ -57,16 +57,17 @@ export default function AdminPage() {
 
   const { data: newspapers, loading: newspapersLoading, error: newspapersError } = useCollection<{id: string, title: string, url: string}>(newspapersQuery);
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<NewsArticle>({
+  const addForm = useForm<NewsArticle>({
     resolver: zodResolver(newsSchema),
   });
   
+  const editForm = useForm<NewsArticle>({
+    resolver: zodResolver(newsSchema),
+  });
+
   const [isAddNewsOpen, setAddNewsOpen] = useState(false);
+  const [isEditNewsOpen, setEditNewsOpen] = useState(false);
+  const [editingArticle, setEditingArticle] = useState<NewsArticle | null>(null);
   const [isUploadPaperOpen, setUploadPaperOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [paperTitle, setPaperTitle] = useState('');
@@ -117,12 +118,34 @@ export default function AdminPage() {
         createdAt: serverTimestamp(),
       });
       toast({ title: 'News Added', description: 'The new article has been published.' });
-      reset();
+      addForm.reset();
       setAddNewsOpen(false);
     } catch (e: any) {
       toast({ variant: 'destructive', title: 'Error', description: 'Could not add news article.' });
     }
   };
+
+  const openEditDialog = (article: NewsArticle) => {
+    setEditingArticle(article);
+    editForm.reset(article);
+    setEditNewsOpen(true);
+  };
+  
+  const onEditNews: SubmitHandler<NewsArticle> = async (data) => {
+    if (!firestore || !editingArticle?.id) return;
+    try {
+      const docRef = doc(firestore, 'news', editingArticle.id);
+      await updateDoc(docRef, {
+        ...data
+      });
+      toast({ title: 'News Updated', description: 'The article has been successfully updated.' });
+      setEditNewsOpen(false);
+      setEditingArticle(null);
+    } catch (e: any) {
+       toast({ variant: 'destructive', title: 'Error', description: 'Could not update news article.' });
+    }
+  };
+
   
   const handleDeleteArticle = async (id: string) => {
     if (!firestore) return;
@@ -229,42 +252,41 @@ export default function AdminPage() {
                                 <DialogHeader>
                                     <DialogTitle>Add New Article</DialogTitle>
                                 </DialogHeader>
-                                <form onSubmit={handleSubmit(onAddNews)} className="space-y-4">
-                                    {/* Form fields for adding news... */}
+                                <form onSubmit={addForm.handleSubmit(onAddNews)} className="space-y-4">
                                     <div>
                                         <Label htmlFor="title">Title</Label>
-                                        <Input id="title" {...register('title')} />
-                                        {errors.title && <p className="text-sm text-destructive">{errors.title.message}</p>}
+                                        <Input id="title" {...addForm.register('title')} />
+                                        {addForm.formState.errors.title && <p className="text-sm text-destructive">{addForm.formState.errors.title.message}</p>}
                                     </div>
                                     <div>
                                         <Label htmlFor="category">Category</Label>
-                                        <Input id="category" {...register('category')} />
-                                        {errors.category && <p className="text-sm text-destructive">{errors.category.message}</p>}
+                                        <Input id="category" {...addForm.register('category')} />
+                                        {addForm.formState.errors.category && <p className="text-sm text-destructive">{addForm.formState.errors.category.message}</p>}
                                     </div>
                                     <div>
                                         <Label htmlFor="summary">Summary</Label>
-                                        <Textarea id="summary" {...register('summary')} />
-                                        {errors.summary && <p className="text-sm text-destructive">{errors.summary.message}</p>}
+                                        <Textarea id="summary" {...addForm.register('summary')} />
+                                        {addForm.formState.errors.summary && <p className="text-sm text-destructive">{addForm.formState.errors.summary.message}</p>}
                                     </div>
                                     <div>
                                         <Label htmlFor="content">Content</Label>
-                                        <Textarea id="content" {...register('content')} rows={5} />
-                                        {errors.content && <p className="text-sm text-destructive">{errors.content.message}</p>}
+                                        <Textarea id="content" {...addForm.register('content')} rows={5} />
+                                        {addForm.formState.errors.content && <p className="text-sm text-destructive">{addForm.formState.errors.content.message}</p>}
                                     </div>
                                     <div>
                                         <Label htmlFor="imageUrl">Image URL</Label>
-                                        <Input id="imageUrl" {...register('imageUrl')} />
-                                        {errors.imageUrl && <p className="text-sm text-destructive">{errors.imageUrl.message}</p>}
+                                        <Input id="imageUrl" {...addForm.register('imageUrl')} />
+                                        {addForm.formState.errors.imageUrl && <p className="text-sm text-destructive">{addForm.formState.errors.imageUrl.message}</p>}
                                     </div>
                                     <div>
                                         <Label htmlFor="imageHint">Image Hint</Label>
-                                        <Input id="imageHint" {...register('imageHint')} />
-                                        {errors.imageHint && <p className="text-sm text-destructive">{errors.imageHint.message}</p>}
+                                        <Input id="imageHint" {...addForm.register('imageHint')} />
+                                        {addForm.formState.errors.imageHint && <p className="text-sm text-destructive">{addForm.formState.errors.imageHint.message}</p>}
                                     </div>
                                     <div>
                                         <Label htmlFor="time">Time (e.g., 2 hours ago)</Label>
-                                        <Input id="time" {...register('time')} />
-                                        {errors.time && <p className="text-sm text-destructive">{errors.time.message}</p>}
+                                        <Input id="time" {...addForm.register('time')} />
+                                        {addForm.formState.errors.time && <p className="text-sm text-destructive">{addForm.formState.errors.time.message}</p>}
                                     </div>
                                     <DialogFooter>
                                         <DialogClose asChild>
@@ -275,13 +297,65 @@ export default function AdminPage() {
                                 </form>
                             </DialogContent>
                         </Dialog>
+                        
+                        {/* Edit News Dialog */}
+                        <Dialog open={isEditNewsOpen} onOpenChange={setEditNewsOpen}>
+                          <DialogContent className="sm:max-w-[425px]">
+                            <DialogHeader>
+                              <DialogTitle>Edit Article</DialogTitle>
+                            </DialogHeader>
+                            <form onSubmit={editForm.handleSubmit(onEditNews)} className="space-y-4">
+                              <div>
+                                <Label htmlFor="edit-title">Title</Label>
+                                <Input id="edit-title" {...editForm.register('title')} />
+                                {editForm.formState.errors.title && <p className="text-sm text-destructive">{editForm.formState.errors.title.message}</p>}
+                              </div>
+                              <div>
+                                <Label htmlFor="edit-category">Category</Label>
+                                <Input id="edit-category" {...editForm.register('category')} />
+                                {editForm.formState.errors.category && <p className="text-sm text-destructive">{editForm.formState.errors.category.message}</p>}
+                              </div>
+                              <div>
+                                <Label htmlFor="edit-summary">Summary</Label>
+                                <Textarea id="edit-summary" {...editForm.register('summary')} />
+                                {editForm.formState.errors.summary && <p className="text-sm text-destructive">{editForm.formState.errors.summary.message}</p>}
+                              </div>
+                              <div>
+                                <Label htmlFor="edit-content">Content</Label>
+                                <Textarea id="edit-content" {...editForm.register('content')} rows={5} />
+                                {editForm.formState.errors.content && <p className="text-sm text-destructive">{editForm.formState.errors.content.message}</p>}
+                              </div>
+                              <div>
+                                <Label htmlFor="edit-imageUrl">Image URL</Label>
+                                <Input id="edit-imageUrl" {...editForm.register('imageUrl')} />
+                                {editForm.formState.errors.imageUrl && <p className="text-sm text-destructive">{editForm.formState.errors.imageUrl.message}</p>}
+                              </div>
+                              <div>
+                                <Label htmlFor="edit-imageHint">Image Hint</Label>
+                                <Input id="edit-imageHint" {...editForm.register('imageHint')} />
+                                {editForm.formState.errors.imageHint && <p className="text-sm text-destructive">{editForm.formState.errors.imageHint.message}</p>}
+                              </div>
+                              <div>
+                                <Label htmlFor="edit-time">Time (e.g., 2 hours ago)</Label>
+                                <Input id="edit-time" {...editForm.register('time')} />
+                                {editForm.formState.errors.time && <p className="text-sm text-destructive">{editForm.formState.errors.time.message}</p>}
+                              </div>
+                              <DialogFooter>
+                                <DialogClose asChild>
+                                  <Button type="button" variant="secondary" onClick={() => setEditNewsOpen(false)}>Cancel</Button>
+                                </DialogClose>
+                                <Button type="submit">Save Changes</Button>
+                              </DialogFooter>
+                            </form>
+                          </DialogContent>
+                        </Dialog>
                         </>
                     )}
                 </div>
             </div>
             {newsLoading && <p>Loading news...</p>}
             {newsError && <p className="text-destructive">Error loading news: {newsError.message}</p>}
-            {newsItems && <NewsList newsItems={newsItems} onDelete={isAdmin ? handleDeleteArticle : undefined} isAdmin={isAdmin} />}
+            {newsItems && <NewsList newsItems={newsItems} onEdit={isAdmin ? openEditDialog : undefined} onDelete={isAdmin ? handleDeleteArticle : undefined} isAdmin={isAdmin} />}
         </div>
         
         {/* Newspaper Management */}
