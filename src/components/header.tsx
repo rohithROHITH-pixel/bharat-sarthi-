@@ -20,19 +20,19 @@ import { useToast } from '@/hooks/use-toast';
 
 const navLinks = [
   { href: '/', label: 'HOME' },
-  { href: '#', label: 'ABOUT US' },
-  { href: '#', label: 'ಅಂತರಾಷ್ಟ್ರೀಯ' },
-  { href: '#', label: 'ಆರೋಗ್ಯ' },
-  { href: '#', label: 'ಕ್ರೀಡೆ' },
-  { href: '#', label: 'ಕ್ರೈಂ ಸುದ್ದಿ' },
-  { href: '#', label: 'ರಾಜಕೀಯ' },
-  { href: '#', label: 'ರಾಜ್ಯ ಸುದ್ದಿ' },
+  { href: '/about', label: 'ABOUT US' },
+  { href: '/news/international', label: 'ಅಂತರಾಷ್ಟ್ರೀಯ' },
+  { href: '/news/health', label: 'ಆರೋಗ್ಯ' },
+  { href: '/news/sports', label: 'ಕ್ರೀಡೆ' },
+  { href: '/news/crime', label: 'ಕ್ರೈಂ ಸುದ್ದಿ' },
+  { href: '/news/politics', label: 'ರಾಜಕೀಯ' },
+  { href: '/news/state', label: 'ರಾಜ್ಯ ಸುದ್ದಿ' },
 ];
 
 const moreLinks = [
-    { href: '#', label: 'Tech' },
-    { href: '#', label: 'Business' },
-    { href: '#', label: 'Entertainment' },
+    { href: '/news/tech', label: 'Tech' },
+    { href: '/news/business', label: 'Business' },
+    { href: '/news/entertainment', label: 'Entertainment' },
 ]
 
 export default function Header() {
@@ -113,10 +113,10 @@ export default function Header() {
           <nav className="hidden md:flex items-center space-x-1">
             {navLinks.map((link) => (
               <Link
-                key={link.href}
+                key={link.label}
                 href={link.href}
                 onClick={() => setActiveLink(link.label)}
-                className="px-3 py-2 text-sm font-medium uppercase hover:bg-primary hover:text-white transition-colors border-b-2"
+                className="px-3 py-2 text-sm font-medium uppercase hover:bg-primary hover:text-white transition-colors border-b-2 data-[active=true]:border-primary data-[active=false]:border-transparent"
                 data-active={activeLink === link.label}
               >
                 {link.label}
@@ -130,7 +130,7 @@ export default function Header() {
               </DropdownMenuTrigger>
               <DropdownMenuContent className="bg-gray-900 text-white border-gray-700">
                 {moreLinks.map((link) => (
-                  <DropdownMenuItem key={link.href} asChild>
+                  <DropdownMenuItem key={link.label} asChild>
                     <Link href={link.href} className="hover:bg-primary !text-white focus:bg-primary focus:text-white">
                       {link.label}
                     </Link>
@@ -141,7 +141,7 @@ export default function Header() {
             <Link
                 href="#epaper"
                 onClick={() => setActiveLink('ಇ-ಪೇಪರ್')}
-                className="px-3 py-2 text-sm font-medium uppercase hover:bg-primary hover:text-white transition-colors border-b-2"
+                className="px-3 py-2 text-sm font-medium uppercase hover:bg-primary hover:text-white transition-colors border-b-2 data-[active=true]:border-primary data-[active=false]:border-transparent"
                 data-active={activeLink === 'ಇ-ಪೇಪರ್'}
               >
                 ಇ-ಪೇಪರ್
@@ -224,7 +224,7 @@ export default function Header() {
                       <nav className="flex flex-col space-y-4">
                           {[...navLinks, { href: '#epaper', label: 'ಇ-ಪೇಪರ್' }].map((link) => (
                           <Link
-                              key={link.href}
+                              key={link.label}
                               href={link.href}
                               className="text-lg font-medium text-gray-300 hover:text-primary transition-colors"
                               onClick={() => setIsMobileMenuOpen(false)}
