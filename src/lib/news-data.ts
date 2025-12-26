@@ -4,7 +4,8 @@ export const newsSchema = z.object({
   id: z.string().optional(),
   title: z.string().min(1, 'Title is required'),
   category: z.string().min(1, 'Category is required'),
-  imageUrl: z.string().url('Must be a valid URL'),
+  // imageUrl is now optional in the base schema because we handle it separately
+  imageUrl: z.string().url('Must be a valid URL').optional(),
   imageHint: z.string().min(1, 'Image hint is required'),
   summary: z.string().min(1, 'Summary is required'),
   content: z.string().min(1, 'Content is required'),
@@ -13,4 +14,9 @@ export const newsSchema = z.object({
   createdAt: z.any().optional(),
 });
 
-export type NewsArticle = z.infer<typeof newsSchema>;
+// For Firestore documents, imageUrl is required.
+export type NewsArticle = z.infer<typeof newsSchema> & {
+    imageUrl: string;
+};
+
+    

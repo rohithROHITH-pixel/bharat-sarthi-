@@ -11,7 +11,7 @@ import { type NewsArticle } from '@/lib/news-data';
 
 type NewsListProps = {
   newsItems: NewsArticle[];
-  onDelete?: (id: string) => void;
+  onDelete?: (id: string, imageUrl: string) => void;
   onEdit?: (article: NewsArticle) => void;
   isAdmin?: boolean;
 };
@@ -74,7 +74,7 @@ export default function NewsList({ newsItems, onDelete, onEdit, isAdmin = false 
                                                 </AlertDialogHeader>
                                                 <AlertDialogFooter>
                                                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={() => onDelete?.(item.id!)}>
+                                                    <AlertDialogAction onClick={() => onDelete?.(item.id!, item.imageUrl)}>
                                                         Continue
                                                     </AlertDialogAction>
                                                 </AlertDialogFooter>

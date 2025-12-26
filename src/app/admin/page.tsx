@@ -58,17 +58,29 @@ export default function AdminPage() {
 
   const { data: newspapers, loading: newspapersLoading, error: newspapersError } = useCollection<Newspaper>(newspapersQuery);
 
-  const addForm = useForm<NewsArticle>({
-    resolver: zodResolver(newsSchema),
+  const [isSubmittingNews, setIsSubmittingNews] = useState(false);
+
+  const addForm = useForm<Omit<NewsArticle, 'imageUrl'>>({
+    resolver: zodResolver(newsSchema.omit({ imageUrl: true })),
+    defaultValues: {
+        title: '',
+        category: '',
+        summary: '',
+        content: '',
+        imageHint: '',
+        time: '',
+    }
   });
   
-  const editForm = useForm<NewsArticle>({
-    resolver: zodResolver(newsSchema),
+  const editForm = useForm<Omit<NewsArticle, 'imageUrl'>>({
+    resolver: zodResolver(newsSchema.omit({ imageUrl: true })),
   });
 
   const [isAddNewsOpen, setAddNewsOpen] = useState(false);
   const [isEditNewsOpen, setEditNewsOpen] = useState(false);
   const [editingArticle, setEditingArticle] = useState<NewsArticle | null>(null);
+  const addImageRef = useRef<HTMLInputElement>(null);
+  const editImageRef = useRef<HTMLInputElement>(null);
   
   const [isUploadPaperOpen, setUploadPaperOpen] = useState(false);
   const [isEditPaperOpen, setEditPaperOpen] = useState(false);
@@ -114,50 +126,115 @@ export default function AdminPage() {
     router.push('/login');
   };
 
-  const onAddNews: SubmitHandler<NewsArticle> = async (data) => {
+  const onAddNews: SubmitHandler<Omit<NewsArticle, 'imageUrl'>> = async (data) => {
     if (!firestore || !user) return;
+    const imageFile = addImageRef.current?.files?.[0];
+
+    if (!imageFile) {
+        toast({ variant: 'destructive', title: 'Error', description: 'Please select an image to upload.' });
+        return;
+    }
+
+    setIsSubmittingNews(true);
+    const storage = getStorage();
+
     try {
-      await addDoc(collection(firestore, 'news'), {
-        ...data,
-        id: '', // Firestore will generate an ID
-        creatorId: user.uid,
-        createdAt: serverTimestamp(),
-      });
-      toast({ title: 'News Added', description: 'The new article has been published.' });
-      addForm.reset();
-      setAddNewsOpen(false);
+        const storageRef = ref(storage, `news-images/${Date.now()}_${imageFile.name}`);
+        const snapshot = await uploadBytes(storageRef, imageFile);
+        const downloadURL = await getDownloadURL(snapshot.ref);
+
+        await addDoc(collection(firestore, 'news'), {
+            ...data,
+            imageUrl: downloadURL,
+            creatorId: user.uid,
+            createdAt: serverTimestamp(),
+        });
+
+        toast({ title: 'News Added', description: 'The new article has been published.' });
+        addForm.reset();
+        setAddNewsOpen(false);
     } catch (e: any) {
-      toast({ variant: 'destructive', title: 'Error', description: 'Could not add news article.' });
+        console.error("Error adding news:", e);
+        toast({ variant: 'destructive', title: 'Error', description: 'Could not add news article.' });
+    } finally {
+        setIsSubmittingNews(false);
     }
   };
 
   const openEditDialog = (article: NewsArticle) => {
     setEditingArticle(article);
-    editForm.reset(article);
+    // We don't pass imageUrl to the form
+    const { imageUrl, ...formData } = article;
+    editForm.reset(formData);
     setEditNewsOpen(true);
   };
   
-  const onEditNews: SubmitHandler<NewsArticle> = async (data) => {
+  const onEditNews: SubmitHandler<Omit<NewsArticle, 'imageUrl'>> = async (data) => {
     if (!firestore || !editingArticle?.id) return;
+
+    const newImageFile = editImageRef.current?.files?.[0];
+    setIsSubmittingNews(true);
+    const storage = getStorage();
+
     try {
-      const docRef = doc(firestore, 'news', editingArticle.id);
-      await updateDoc(docRef, {
-        ...data
-      });
-      toast({ title: 'News Updated', description: 'The article has been successfully updated.' });
-      setEditNewsOpen(false);
-      setEditingArticle(null);
+        let newImageUrl = editingArticle.imageUrl;
+
+        // If a new image is uploaded, handle the upload and delete the old one
+        if (newImageFile) {
+            // 1. Delete the old image from storage
+            if (editingArticle.imageUrl) {
+                try {
+                    const oldImageRef = ref(storage, editingArticle.imageUrl);
+                    await deleteObject(oldImageRef);
+                } catch (deleteError: any) {
+                    // Log error but don't block update if deletion fails
+                    console.error("Failed to delete old image:", deleteError);
+                }
+            }
+
+            // 2. Upload the new image
+            const newImageRef = ref(storage, `news-images/${Date.now()}_${newImageFile.name}`);
+            const snapshot = await uploadBytes(newImageRef, newImageFile);
+            newImageUrl = await getDownloadURL(snapshot.ref);
+        }
+
+        // 3. Update the Firestore document
+        const docRef = doc(firestore, 'news', editingArticle.id);
+        await updateDoc(docRef, {
+            ...data,
+            imageUrl: newImageUrl // Use new or existing URL
+        });
+
+        toast({ title: 'News Updated', description: 'The article has been successfully updated.' });
+        setEditNewsOpen(false);
+        setEditingArticle(null);
     } catch (e: any) {
-       toast({ variant: 'destructive', title: 'Error', description: 'Could not update news article.' });
+        console.error("Error updating news:", e);
+        toast({ variant: 'destructive', title: 'Error', description: 'Could not update news article.' });
+    } finally {
+        setIsSubmittingNews(false);
     }
   };
 
   
-  const handleDeleteArticle = async (id: string) => {
+  const handleDeleteArticle = async (id: string, imageUrl: string) => {
     if (!firestore) return;
+    const storage = getStorage();
+
     try {
-      await deleteDoc(doc(firestore, 'news', id));
-      toast({ title: 'News Deleted', description: 'The article has been removed.' });
+        // First, delete the image from Storage
+         if (imageUrl) {
+            try {
+                const imageRef = ref(storage, imageUrl);
+                await deleteObject(imageRef);
+            } catch (deleteError: any) {
+                 console.error("Failed to delete image, but proceeding with doc deletion:", deleteError);
+            }
+        }
+        
+        // Then, delete the document from Firestore
+        await deleteDoc(doc(firestore, 'news', id));
+        toast({ title: 'News Deleted', description: 'The article has been removed.' });
     } catch (e: any) {
       toast({ variant: 'destructive', title: 'Error', description: 'Could not delete article.' });
     }
@@ -346,9 +423,8 @@ export default function AdminPage() {
                                             {addForm.formState.errors.content && <p className="text-sm text-destructive">{addForm.formState.errors.content.message}</p>}
                                         </div>
                                         <div>
-                                            <Label htmlFor="imageUrl">Image URL</Label>
-                                            <Input id="imageUrl" {...addForm.register('imageUrl')} />
-                                            {addForm.formState.errors.imageUrl && <p className="text-sm text-destructive">{addForm.formState.errors.imageUrl.message}</p>}
+                                            <Label htmlFor="imageFile">Article Image</Label>
+                                            <Input id="imageFile" type="file" accept="image/*" ref={addImageRef} required />
                                         </div>
                                         <div>
                                             <Label htmlFor="imageHint">Image Hint</Label>
@@ -364,9 +440,11 @@ export default function AdminPage() {
                                 </ScrollArea>
                                 <DialogFooter className="mt-4 flex-shrink-0">
                                     <DialogClose asChild>
-                                    <Button type="button" variant="secondary">Cancel</Button>
+                                      <Button type="button" variant="secondary" disabled={isSubmittingNews}>Cancel</Button>
                                     </DialogClose>
-                                    <Button type="submit" form="add-news-form">Publish</Button>
+                                    <Button type="submit" form="add-news-form" disabled={isSubmittingNews}>
+                                      {isSubmittingNews ? 'Publishing...' : 'Publish'}
+                                    </Button>
                                 </DialogFooter>
                             </DialogContent>
                         </Dialog>
@@ -400,9 +478,9 @@ export default function AdminPage() {
                                   {editForm.formState.errors.content && <p className="text-sm text-destructive">{editForm.formState.errors.content.message}</p>}
                                 </div>
                                 <div>
-                                  <Label htmlFor="edit-imageUrl">Image URL</Label>
-                                  <Input id="edit-imageUrl" {...editForm.register('imageUrl')} />
-                                  {editForm.formState.errors.imageUrl && <p className="text-sm text-destructive">{editForm.formState.errors.imageUrl.message}</p>}
+                                    <Label htmlFor="editImageFile">Replace Article Image (Optional)</Label>
+                                    <Input id="editImageFile" type="file" accept="image/*" ref={editImageRef} />
+                                    <p className='text-xs text-muted-foreground mt-1'>Only select a file if you want to replace the current image.</p>
                                 </div>
                                 <div>
                                   <Label htmlFor="edit-imageHint">Image Hint</Label>
@@ -418,9 +496,11 @@ export default function AdminPage() {
                             </ScrollArea>
                             <DialogFooter className="mt-4 flex-shrink-0">
                                 <DialogClose asChild>
-                                  <Button type="button" variant="secondary" onClick={() => setEditNewsOpen(false)}>Cancel</Button>
+                                  <Button type="button" variant="secondary" onClick={() => setEditNewsOpen(false)} disabled={isSubmittingNews}>Cancel</Button>
                                 </DialogClose>
-                                <Button type="submit" form="edit-news-form">Save Changes</Button>
+                                <Button type="submit" form="edit-news-form" disabled={isSubmittingNews}>
+                                  {isSubmittingNews ? 'Saving...' : 'Save Changes'}
+                                </Button>
                             </DialogFooter>
                           </DialogContent>
                         </Dialog>
@@ -430,7 +510,7 @@ export default function AdminPage() {
             </div>
             {newsLoading && <p>Loading news...</p>}
             {newsError && <p className="text-destructive">Error loading news: {newsError.message}</p>}
-            <NewsList newsItems={newsItems} onEdit={isAdmin ? openEditDialog : undefined} onDelete={isAdmin ? handleDeleteArticle : undefined} isAdmin={isAdmin} />
+            <NewsList newsItems={newsItems} onEdit={isAdmin ? openEditDialog : undefined} onDelete={isAdmin ? (id, url) => handleDeleteArticle(id, url) : undefined} isAdmin={isAdmin} />
         </div>
         
         {/* Newspaper Management */}
@@ -570,3 +650,5 @@ export default function AdminPage() {
     </div>
   );
 }
+
+    
