@@ -11,7 +11,7 @@ export const newsSchema = z.object({
   content: z.string().min(1, 'Content is required'),
   time: z.string().min(1, 'Time is required'),
   creatorId: z.string().optional(),
-  // Can be a server timestamp, or a string after serialization
+  // Can be a server timestamp, a Date object, or a string after serialization
   createdAt: z.any().optional(),
 });
 

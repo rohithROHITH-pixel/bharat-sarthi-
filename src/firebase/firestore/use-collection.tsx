@@ -6,11 +6,33 @@ import {
   DocumentData,
   FirestoreError,
   QuerySnapshot,
+  Timestamp,
 } from 'firebase/firestore';
 
 export interface UseCollectionOptions<T> {
   // Define any options here
 }
+
+// Helper function to recursively convert Timestamps to ISO strings
+const convertTimestamps = (data: any): any => {
+  if (data instanceof Timestamp) {
+    return data.toDate().toISOString();
+  }
+  if (Array.isArray(data)) {
+    return data.map(convertTimestamps);
+  }
+  if (data !== null && typeof data === 'object') {
+    const newData: { [key: string]: any } = {};
+    for (const key in data) {
+      if (Object.prototype.hasOwnProperty.call(data, key)) {
+        newData[key] = convertTimestamps(data[key]);
+      }
+    }
+    return newData;
+  }
+  return data;
+};
+
 
 export function useCollection<T>(
   query: Query<T, DocumentData> | null,
@@ -38,7 +60,12 @@ export function useCollection<T>(
     const unsubscribe = onSnapshot(
       query,
       (snapshot: QuerySnapshot<T>) => {
-        const items = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as T));
+        const items = snapshot.docs.map(doc => {
+            const docData = doc.data();
+            // Convert any Timestamps to serializable strings
+            const serializableData = convertTimestamps(docData);
+            return { ...serializableData, id: doc.id } as T;
+        });
         setData(items);
         setLoading(false);
       },
