@@ -5,21 +5,22 @@ import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Clock } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
-import { useDoc } from '@/firebase';
+import { useDoc, useFirestore } from '@/firebase';
 import { doc } from 'firebase/firestore';
-import { useFirestore } from '@/firebase';
 import { NewsArticle } from '@/lib/news-data';
+import { useMemo } from 'react';
 
 export default function NewsArticlePage() {
   const params = useParams();
-  const { id } = params;
   const firestore = useFirestore();
+  const articleId = typeof params.id === 'string' ? params.id : '';
 
-  const articleId = typeof id === 'string' ? id : '';
+  const articleRef = useMemo(() => {
+      if (!firestore || !articleId) return null;
+      return doc(firestore, 'news', articleId);
+  }, [firestore, articleId]);
   
-  const { data: article, loading, error } = useDoc<NewsArticle>(
-      firestore && articleId ? doc(firestore, 'news', articleId) : null
-  );
+  const { data: article, loading, error } = useDoc<NewsArticle>(articleRef);
 
   if (loading) {
     return (
@@ -37,7 +38,7 @@ export default function NewsArticlePage() {
   }
   
   if (error) {
-      return <p className='text-center text-destructive'>Error loading article.</p>
+      return <p className='text-center text-destructive'>Error loading article: {error.message}</p>
   }
 
   return (
@@ -67,7 +68,10 @@ export default function NewsArticlePage() {
               </h1>
               <div className="prose prose-lg max-w-none text-foreground/80 leading-relaxed space-y-4">
                   <p className="font-semibold text-lg text-foreground/90">{article.summary}</p>
-                  <p>{article.content}</p>
+                  {/* Split content by newline to render paragraphs */}
+                  {article.content.split('\n').map((paragraph, index) => (
+                    <p key={index}>{paragraph}</p>
+                  ))}
               </div>
           </CardContent>
         </Card>
