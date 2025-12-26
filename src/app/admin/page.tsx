@@ -64,6 +64,12 @@ export default function AdminPage() {
   const [paperTitle, setPaperTitle] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/login');
+    }
+  }, [user, loading, router]);
+
 
   const handleLogout = async () => {
     if (!auth) return;
@@ -152,7 +158,7 @@ export default function AdminPage() {
     }
   };
 
-  if (loading) {
+  if (loading || !user) {
     return (
       <div className="container mx-auto px-4 py-8 flex justify-center items-center min-h-[calc(100vh-20rem)]">
         <div className="text-center">
@@ -160,15 +166,6 @@ export default function AdminPage() {
           <p className="mt-4 text-muted-foreground">Loading Admin Panel...</p>
         </div>
       </div>
-    );
-  }
-
-  if (!user) {
-    router.push('/login');
-    return (
-        <div className="container mx-auto px-4 py-8 flex justify-center items-center min-h-[calc(100vh-20rem)]">
-            <p>Redirecting to login...</p>
-        </div>
     );
   }
 
