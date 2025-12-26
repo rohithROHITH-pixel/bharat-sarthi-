@@ -3,9 +3,19 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Helper function to check if the user has an 'admin' custom claim.
-    function isAdmin() {
-      return request.auth != null && request.auth.token.admin == true;
+    // Helper function to check if the user is the owner of the document.
+    function isOwner(docId) {
+      return request.auth != null && request.auth.uid == get(/databases/$(database)/documents/news/$(docId)).data.creatorId;
+    }
+
+    // Helper function to check if the user is authenticated.
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to check if the incoming request data's creatorId matches the user's UID.
+    function isCreatingAsSelf() {
+        return request.resource.data.creatorId == request.auth.uid;
     }
 
     // Rules for the 'news' collection
@@ -13,8 +23,11 @@ service cloud.firestore {
       // Anyone can read news articles.
       allow read: if true;
 
-      // Only administrators can create, update, or delete articles.
-      allow write: if isAdmin();
+      // Authenticated users can create articles if they set themselves as the creator.
+      allow create: if isAuthenticated() && isCreatingAsSelf();
+      
+      // The owner of the article can update or delete it.
+      allow update, delete: if isOwner(newsId);
     }
   }
 }

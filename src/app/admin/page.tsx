@@ -11,7 +11,7 @@ import { PlusCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Label } from '@/components/ui/label';
 import { useCollection } from '@/firebase';
-import { collection, deleteDoc, doc, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, deleteDoc, doc, addDoc, serverTimestamp, query, orderBy } from 'firebase/firestore';
 import { useFirestore } from '@/firebase';
 import { NewsArticle, newsSchema } from '@/lib/news-data';
 import {
@@ -28,7 +28,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Textarea } from '@/components/ui/textarea';
 
 export default function AdminPage() {
-  const { user, loading, claims } = useUser();
+  const { user, loading } = useUser();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -37,7 +37,7 @@ export default function AdminPage() {
   const firestore = useFirestore();
 
   const { data: newsItems, loading: newsLoading, error: newsError } = useCollection<NewsArticle>(
-    firestore ? collection(firestore, 'news') : null
+    firestore ? query(collection(firestore, 'news'), orderBy('createdAt', 'desc')) : null
   );
 
   const {
@@ -108,7 +108,7 @@ export default function AdminPage() {
     );
   }
 
-  if (!user || !claims.admin) {
+  if (!user) {
     return (
       <div className="container mx-auto px-4 py-8 flex justify-center items-center min-h-[calc(100vh-20rem)]">
         <Card className="w-full max-w-md">
@@ -117,12 +117,6 @@ export default function AdminPage() {
             <CardDescription>Enter your credentials to access the admin panel.</CardDescription>
           </CardHeader>
           <CardContent>
-            {claims.loaded && user && !claims.admin && (
-                <div className="mb-4 text-center text-destructive bg-destructive/10 p-3 rounded-md">
-                    <p className="font-bold">Access Denied</p>
-                    <p className="text-sm">You do not have administrative privileges.</p>
-                </div>
-            )}
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
@@ -159,7 +153,7 @@ export default function AdminPage() {
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <div className='text-center sm:text-left'>
-          <h1 className="text-3xl font-bold">Admin Panel</h1>
+          <h1 className="text-3xl font-bold">Content Dashboard</h1>
           <p className="text-muted-foreground">Welcome back, {user.email}.</p>
         </div>
         <Button onClick={handleLogout} className="w-full sm:w-auto">Logout</Button>
