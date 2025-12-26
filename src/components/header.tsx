@@ -107,7 +107,7 @@ export default function Header() {
                         <span>+91 9740160669</span>
                       </div>
                     </div>
-                     <Button size="sm" variant="outline" className="text-foreground mt-2">Advertise Now</Button>
+                     <Button size="sm" variant="outline" className="text-foreground mt-2 text-xs md:text-sm">Advertise Now</Button>
                 </div>
             </div>
         </div>
