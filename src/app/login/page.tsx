@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { Button } from '@/components/ui/button';
@@ -28,7 +28,7 @@ export default function LoginPage() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       toast({ title: 'Login Successful', description: 'Welcome back!' });
-      router.push('/admin'); // Redirect to admin page after successful login
+      // The redirect will now be handled by the useEffect below
     } catch (err: any) {
       if (err.code === 'auth/invalid-credential') {
         setError('Invalid email or password. Please try again.');
@@ -38,7 +38,14 @@ export default function LoginPage() {
     }
   };
 
-  if (loading) {
+  useEffect(() => {
+    if (user) {
+      router.push('/admin');
+    }
+  }, [user, router]);
+
+
+  if (loading || user) { // Also show loader while redirecting
     return (
       <div className="container mx-auto px-4 py-8 flex justify-center items-center min-h-[calc(100vh-20rem)]">
         <div className="text-center">
@@ -47,11 +54,6 @@ export default function LoginPage() {
         </div>
       </div>
     );
-  }
-
-  if (user) {
-    router.push('/admin');
-    return null;
   }
 
   return (
