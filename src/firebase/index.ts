@@ -1,7 +1,7 @@
 import { getApps, getApp, initializeApp, FirebaseApp } from 'firebase/app';
 import { getAuth, Auth } from 'firebase/auth';
 import { getFirestore, Firestore } from 'firebase/firestore';
-import { app as firebaseApp } from './config';
+import { firebase as firebaseApp } from './config';
 
 // Re-export hooks and providers
 export * from './provider';

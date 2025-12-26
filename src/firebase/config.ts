@@ -10,6 +10,13 @@ const firebaseConfig = {
   "messagingSenderId": "473577482068"
 };
 
-const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+// Initialize Firebase App
+// This function avoids re-initializing the app on both server and client.
+function initializeFirebaseApp() {
+  if (getApps().length) {
+    return getApp();
+  }
+  return initializeApp(firebaseConfig);
+}
 
-export { app };
+export const firebase = initializeFirebaseApp();
