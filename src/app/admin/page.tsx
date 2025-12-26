@@ -28,7 +28,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Textarea } from '@/components/ui/textarea';
 
 const ADMIN_USER_ID = "LDvQPgjj26PAoWzyBHm6aNe3vsv2";
-const ADMIN_USER_EMAIL = "REPLACE_WITH_YOUR_ADMIN_EMAIL"; // <-- Add your admin email here
+const ADMIN_USER_EMAIL = "roopanrohith320@gmail.com";
 
 export default function AdminPage() {
   const { user, loading } = useUser();
