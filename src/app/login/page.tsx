@@ -28,7 +28,11 @@ export default function LoginPage() {
       toast({ title: 'Login Successful', description: 'Welcome back!' });
       router.push('/');
     } catch (err: any) {
-      setError('Invalid email or password. Please try again.');
+      if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
+          setError('Invalid email or password. Please try again.');
+      } else {
+          setError(err.message || 'An unexpected error occurred.');
+      }
     }
   };
   
