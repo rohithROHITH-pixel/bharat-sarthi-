@@ -32,16 +32,14 @@ import { useRouter } from 'next/navigation';
 import { sampleNewsData } from '@/lib/sample-data';
 
 
-const ADMIN_USER_EMAIL = "roopanrohith320@gmail.com";
-
 export default function AdminPage() {
-  const { user, loading } = useUser();
+  const { user, claims, loading } = useUser();
   const auth = useAuth();
   const { toast } = useToast();
   const firestore = useFirestore();
   const router = useRouter();
 
-  const isAdmin = user?.email === ADMIN_USER_EMAIL;
+  const isAdmin = claims?.admin === true;
 
   const newsQuery = useMemo(() => {
       if (!firestore) return null;
@@ -74,10 +72,11 @@ export default function AdminPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (!loading && !user) {
+    // Wait until loading is finished and claims are loaded
+    if (!loading && claims.loaded && !user) {
       router.push('/login');
     }
-  }, [user, loading, router]);
+  }, [user, claims, loading, router]);
   
   const handleSeedData = async () => {
     if (!firestore || !user) return;
@@ -210,7 +209,7 @@ export default function AdminPage() {
     }
   };
 
-  if (loading || !user) {
+  if (loading || !claims.loaded || !user) {
     return (
       <div className="container mx-auto px-4 py-8 flex justify-center items-center min-h-[calc(100vh-20rem)]">
         <div className="text-center">
@@ -226,7 +225,9 @@ export default function AdminPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <div className='text-center sm:text-left'>
           <h1 className="text-3xl font-bold">Content Dashboard</h1>
-          <p className="text-muted-foreground">Welcome back, {user.email}.</p>
+           <p className="text-muted-foreground">
+            {isAdmin ? `Welcome back, Admin (${user.email}).` : `Welcome, ${user.email}.`}
+          </p>
         </div>
         <Button onClick={handleLogout} className="w-full sm:w-auto">Logout</Button>
       </div>
@@ -355,7 +356,7 @@ export default function AdminPage() {
             </div>
             {newsLoading && <p>Loading news...</p>}
             {newsError && <p className="text-destructive">Error loading news: {newsError.message}</p>}
-            {newsItems && <NewsList newsItems={newsItems} onEdit={isAdmin ? openEditDialog : undefined} onDelete={isAdmin ? handleDeleteArticle : undefined} isAdmin={isAdmin} />}
+            <NewsList newsItems={newsItems} onEdit={isAdmin ? openEditDialog : undefined} onDelete={isAdmin ? handleDeleteArticle : undefined} isAdmin={isAdmin} />
         </div>
         
         {/* Newspaper Management */}
